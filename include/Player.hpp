@@ -2,6 +2,9 @@
 # define PLAYER_HPP
 
 # include <SFML/Graphics.hpp>
+# include <iostream>
+
+# include "Constants.hpp"
 
 
 class Player
@@ -23,12 +26,17 @@ class Player
 	Player();
 	~Player() {};
 
-	void	movePlayer(float dt);
+	void	movePlayer(float dt, float gravity);
 
+	void	setJumpState(bool state);
 
 	sf::RectangleShape	&getSprite();
 	sf::Vector2f		&getDirVec();
+	sf::Vector2f		&getCoord();
 	float				&getMoveSpeed();
+	float				&getJumpPower();
+	bool				&getJumpState();
+
 
 };
 

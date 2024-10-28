@@ -1,10 +1,5 @@
 #include <SFML/Graphics.hpp>
-
 #include "GameHandler.hpp"
-
-#define WINDOW_WIDTH 1056
-#define WINDOW_HEIGHT 736
-
 
 
 int main()
@@ -13,6 +8,9 @@ int main()
     window.setFramerateLimit(144);
 
 	GameHandler game;
+
+	game.getMap().initMap();
+	
 
 	sf::Clock	deltaClock;
 

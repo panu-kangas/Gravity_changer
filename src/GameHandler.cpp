@@ -6,10 +6,10 @@
 
 GameHandler::GameHandler()
 {
-	gravity = 10;
+	gravity = 0.05;
 
 	upPressed = false;
-	downPressed = false;
+//	downPressed = false;
 	rightPressed = false;
 	leftPressed = false;
 }
@@ -34,27 +34,27 @@ void	GameHandler::initGame()
 
 void	GameHandler::checkInput(sf::Event &event)
 {
-	sf::Vector2f tempVec = {0, 0};
-
 	switch (event.key.scancode)
 	{
 		case sf::Keyboard::Scan::W :
-			tempVec.y = -1;
-			setKeypressState(true, UP);
+			if (!player.getJumpState())
+			{
+				player.setJumpState(true);
+				player.getDirVec().y = player.getJumpPower();
+			}
+			setKeypressState(true, UP); // is this needed?
 			break ;
 
-		case sf::Keyboard::Scan::S :
-			tempVec.y = 1;
-			setKeypressState(true, DOWN);
-			break ;
+//		case sf::Keyboard::Scan::S :
+//			tempVec.y = 1;
+//			setKeypressState(true, DOWN);
+//			break ;
 
 		case sf::Keyboard::Scan::A :
-			tempVec.x = -1;
 			setKeypressState(true, LEFT);
 			break ;
 
 		case sf::Keyboard::Scan::D :
-			tempVec.x = 1;
 			setKeypressState(true, RIGHT);
 			break ;
 
@@ -62,7 +62,6 @@ void	GameHandler::checkInput(sf::Event &event)
 			return ;
 	}
 
-	player.getDirVec() = tempVec;
 }
 
 void	GameHandler::checkRelease(sf::Event &event)
@@ -73,9 +72,9 @@ void	GameHandler::checkRelease(sf::Event &event)
 			setKeypressState(false, UP);
 			break ;
 
-		case sf::Keyboard::Scan::S :
-			setKeypressState(false, DOWN);
-			break ;
+//		case sf::Keyboard::Scan::S :
+//			setKeypressState(false, DOWN);
+//			break ;
 
 		case sf::Keyboard::Scan::A :
 			setKeypressState(false, LEFT);
@@ -98,9 +97,58 @@ void	GameHandler::checkRelease(sf::Event &event)
 
 void	GameHandler::updateGame(float dt)
 {
-	if (upPressed || downPressed || leftPressed || rightPressed)
-		player.movePlayer(dt);
+	// MOVE THIS TO OWN FUNCTION
 
+	if (leftPressed)
+		player.getDirVec().x = -1;
+	else if (rightPressed)
+		player.getDirVec().x = 1;
+	
+	if (!leftPressed && !rightPressed)
+		player.getDirVec().x = 0;
+
+	//
+
+	if (player.getJumpState() || leftPressed || rightPressed) // || downPressed
+	{
+		player.movePlayer(dt, gravity);
+		if (checkWallCollision(player, map))
+			fixPlayerPos();
+	}
+
+
+}
+
+bool	GameHandler::checkWallCollision(Player &player, Map &map)
+{
+	sf::Vector2f	checkPoints[4];
+
+	for (int i = 0; i < 4; ++i)
+	{
+		checkPoints[i].x = player.getCoord().x;
+		checkPoints[i].y = player.getCoord().y;
+	}
+
+	checkPoints[1].x += PLAYER_SIZE;
+	checkPoints[2].x += PLAYER_SIZE;
+	checkPoints[2].y += PLAYER_SIZE;
+	checkPoints[3].y += PLAYER_SIZE;
+
+	for (int i = 0; i < 4; ++i)
+	{
+		if (map.getTileType(checkPoints[i].x / TILE_SIZE, checkPoints[i].x / TILE_SIZE) == WALL)
+			return (true);
+	}
+
+	return (false);
+
+}
+
+void	GameHandler::fixPlayerPos()
+{
+	// Make temp dirVec, that goes to the opposite directions where player just moved
+	// Remember gravity effect! It has already been reduced from dirvec.y!
+	// make unit vector, and move pixel by pixel, until all the points are out of wall
 }
 
 
@@ -111,6 +159,12 @@ void	GameHandler::updateGame(float dt)
 
 void	GameHandler::drawGame(sf::RenderWindow &window)
 {
+
+	// MAP
+
+	map.drawMap(window);
+
+	// PLAYER
 	window.draw(player.getSprite());
 
 }
@@ -125,12 +179,15 @@ void	GameHandler::setKeypressState(bool state, int direction)
 {
 	if (direction == UP)
 		upPressed = state;
-	else if (direction == DOWN)
-		downPressed = state;
 	else if (direction == LEFT)
 		leftPressed = state;
 	else if (direction == RIGHT)
 		rightPressed = state;
+
+	/*
+	else if (direction == DOWN)
+		downPressed = state;
+	*/
 
 }
 
@@ -145,3 +202,9 @@ Player	&GameHandler::getPlayer()
 {
 	return (player);
 }
+
+Map		&GameHandler::getMap()
+{
+	return (map);
+}
+

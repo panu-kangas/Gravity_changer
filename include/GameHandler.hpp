@@ -1,15 +1,12 @@
 #ifndef GAMEHANDLER_HPP
 # define GAMEHANDLER_HPP
 
-#include "Player.hpp"
+# include <iostream>
 
-enum direction
-{
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT
-};
+# include "Constants.hpp"
+# include "Player.hpp"
+# include "Map.hpp"
+
 
 
 class GameHandler
@@ -17,14 +14,14 @@ class GameHandler
 	private:
 
 	Player	player;
+	Map		map;
 
 	float	gravity;
 
 	bool	upPressed;
-	bool	downPressed;
+//	bool	downPressed;
 	bool	rightPressed;
 	bool	leftPressed;
-
 
 
 	public:
@@ -41,10 +38,15 @@ class GameHandler
 	void	updateGame(float dt);
 	void	drawGame(sf::RenderWindow &window);
 
+	bool	checkWallCollision(Player &player, Map &map);
+	void	fixPlayerPos();
+
+
+
 	void	setKeypressState(bool state, int direction);
 
-
 	Player	&getPlayer();
+	Map		&getMap();
 
 };
 
