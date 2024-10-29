@@ -6,8 +6,6 @@
 
 Map::Map()
 {
-	wallSprite.setFillColor({235, 168, 14}); // sort of orange
-	wallSprite.setSize({TILE_SIZE, TILE_SIZE});
 
 }
 
@@ -18,7 +16,6 @@ Map::Map()
 
 void	Map::initMap()
 {
-
 	readMap();
 }
 
@@ -38,14 +35,20 @@ void	Map::readMap()
 	{
 		for (int x = 0; x < WINDOW_WIDTH; x += TILE_SIZE)
 		{
-			if (y > 608)
+			if (y > 608 || y == 0 \
+			|| x == 0 || x == WINDOW_WIDTH - TILE_SIZE \
+			|| (y == 32 && x == 160) \
+			|| (y == 64 && x == 192)
+			|| (y == 576 && x == 192) \
+			|| (y == 608 && x == 160))
+			{
 				tempTile.type = WALL;
+				tempTile.shape.setSize({TILE_SIZE, TILE_SIZE});
+				tempTile.shape.setFillColor({235, 168, 14});
+			}
 			else
 				tempTile.type = EMPTY;
-
-			if (y == 576 && x == 576)
-				tempTile.type = WALL;
-
+				
 			tempVec.push_back(tempTile);
 		}
 		tileVec.push_back(tempVec);
@@ -69,8 +72,8 @@ void	Map::drawMap(sf::RenderWindow &window)
 		{
 			if (tileVec[y][x].type == WALL)
 			{
-				wallSprite.setPosition(x * TILE_SIZE, y * TILE_SIZE);
-				window.draw(wallSprite);
+				tileVec[y][x].shape.setPosition(x * TILE_SIZE, y * TILE_SIZE);
+				window.draw(tileVec[y][x].shape);
 			}
 		}
 	}

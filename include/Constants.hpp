@@ -7,6 +7,9 @@
 # define TILE_SIZE 32
 # define PLAYER_SIZE 16
 
+# include <SFML/Graphics.hpp> // this is not a good place for this...!
+
+
 enum direction
 {
 	UP,
@@ -24,6 +27,7 @@ enum tiletype
 struct mapTile
 {
 	int	type;
+	sf::RectangleShape	shape;
 
 	// something else...?
 };

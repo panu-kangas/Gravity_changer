@@ -1,7 +1,6 @@
 #ifndef MAP_HPP
 # define MAP_HPP
 
-# include <SFML/Graphics.hpp>
 # include <iostream>
 # include <vector>
 
@@ -11,8 +10,6 @@
 class Map
 {
 	private:
-
-	sf::RectangleShape	wallSprite;
 
 	std::vector<std::vector<mapTile>>	tileVec;
 

@@ -23,6 +23,16 @@ class GameHandler
 	bool	rightPressed;
 	bool	leftPressed;
 
+	bool	collUp;
+	bool	collDown;
+	bool	collLeft;
+	bool	collRight;
+
+	void	checkCollisions();
+	void	checkWallCollision();
+	void	getCollisionFlag(mapTile &tile);
+
+
 
 	public:
 
@@ -38,8 +48,6 @@ class GameHandler
 	void	updateGame(float dt);
 	void	drawGame(sf::RenderWindow &window);
 
-	bool	checkWallCollision(Player &player, Map &map);
-	void	fixPlayerPos();
 
 
 

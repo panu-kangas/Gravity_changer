@@ -12,6 +12,12 @@ GameHandler::GameHandler()
 //	downPressed = false;
 	rightPressed = false;
 	leftPressed = false;
+
+	collUp = false;
+	collDown = false;
+	collLeft = false;
+	collRight = false;
+
 }
 
 
@@ -109,47 +115,111 @@ void	GameHandler::updateGame(float dt)
 
 	//
 
-	if (player.getJumpState() || leftPressed || rightPressed) // || downPressed
-	{
-		player.movePlayer(dt, gravity);
-		if (checkWallCollision(player, map))
-			fixPlayerPos();
-	}
+	player.movePlayer(dt, gravity);
+	checkCollisions();
+	
 
 
 }
 
-bool	GameHandler::checkWallCollision(Player &player, Map &map)
+void	GameHandler::checkCollisions()
 {
-	sf::Vector2f	checkPoints[4];
+	checkWallCollision();
 
-	for (int i = 0; i < 4; ++i)
-	{
-		checkPoints[i].x = player.getCoord().x;
-		checkPoints[i].y = player.getCoord().y;
-	}
+	if (collUp == true || collDown == true || collLeft == true || collRight == true)
+		player.fixPosAfterCollision(map, collUp, collDown, collLeft, collRight);
 
-	checkPoints[1].x += PLAYER_SIZE;
-	checkPoints[2].x += PLAYER_SIZE;
-	checkPoints[2].y += PLAYER_SIZE;
-	checkPoints[3].y += PLAYER_SIZE;
-
-	for (int i = 0; i < 4; ++i)
-	{
-		if (map.getTileType(checkPoints[i].x / TILE_SIZE, checkPoints[i].x / TILE_SIZE) == WALL)
-			return (true);
-	}
-
-	return (false);
 
 }
 
-void	GameHandler::fixPlayerPos()
+void	GameHandler::checkWallCollision()
 {
-	// Make temp dirVec, that goes to the opposite directions where player just moved
-	// Remember gravity effect! It has already been reduced from dirvec.y!
-	// make unit vector, and move pixel by pixel, until all the points are out of wall
+	sf::Vector2i	playerTileCoord = player.getCurTileCoord();
+
+	for (int y = playerTileCoord.y - 1; y < playerTileCoord.y + 2; ++y)
+	{
+		if (y < 0 || y >= (WINDOW_HEIGHT / TILE_SIZE))
+			continue ;
+			
+		for (int x = playerTileCoord.x - 1; x < playerTileCoord.x + 2; ++x)
+		{
+			if (x < 0 || x >= (WINDOW_WIDTH / TILE_SIZE))
+				continue ;
+			
+			mapTile &tile = map.getTileVec()[y][x];
+			if (tile.type == EMPTY)
+				continue ;
+
+			if (tile.shape.getGlobalBounds().intersects(player.getSprite().getGlobalBounds()))
+				getCollisionFlag(tile);
+		}
+	}
+
 }
+
+
+void	GameHandler::getCollisionFlag(mapTile &tile)
+{
+	sf::Vector2f	playerCheckPoints[4];
+	sf::FloatRect	playerBounds = player.getSprite().getGlobalBounds();
+	sf::FloatRect	tileBounds = tile.shape.getGlobalBounds();
+
+	playerCheckPoints[0].x = playerBounds.left;
+	playerCheckPoints[0].y = playerBounds.top;
+	playerCheckPoints[1].x = playerBounds.left + PLAYER_SIZE;
+	playerCheckPoints[1].y = playerBounds.top;
+	playerCheckPoints[2].x = playerBounds.left + PLAYER_SIZE;
+	playerCheckPoints[2].y = playerBounds.top + PLAYER_SIZE;
+	playerCheckPoints[3].x = playerBounds.left;
+	playerCheckPoints[3].y = playerBounds.top + PLAYER_SIZE;
+
+	int i;
+	for (i = 0; i < 4; ++i)
+	{
+		if (tileBounds.contains(playerCheckPoints[i]))
+		{
+			sf::Vector2i	collisionTile;
+			collisionTile.x = floor(playerCheckPoints[i].x) / TILE_SIZE;
+			collisionTile.y = floor(playerCheckPoints[i].y) / TILE_SIZE;
+
+			sf::Vector2i	playerTile;
+			playerTile.x = floor(playerBounds.left + PLAYER_SIZE / 2) / TILE_SIZE;
+			playerTile.y = floor(playerBounds.top + PLAYER_SIZE / 2) / TILE_SIZE;
+
+
+			// SMALL BUG HERE! Player can cut through the corners of walls
+
+			// Example: Player jumps up and hugs towards a wall on the right side
+			// When most of the rect has gone by the upper level of the hugged wall, only
+			// downright point (index 2) of player is left colliding.
+			// This triggers second if, because playerTile is based on centre of player
+			// (so collision tile is one down from player --> bigger)
+			// WHAT SHOULD BE TRIGGERED IS collRight CONDITION
+			
+			// How to fix this?
+
+			if (collisionTile.y < playerTile.y)
+			{
+				if (map.getTileType(playerCheckPoints[i].x / TILE_SIZE, (playerCheckPoints[i].y + 10) / TILE_SIZE) == EMPTY)
+					collUp = true;
+			}
+			else if (collisionTile.y > playerTile.y)
+			{
+				if (map.getTileType(playerCheckPoints[i].x / TILE_SIZE, (playerCheckPoints[i].y - 10) / TILE_SIZE) == EMPTY)
+					collDown = true;
+			}
+			else if (collisionTile.x < playerTile.x)
+				collLeft = true;
+			else if(collisionTile.x > playerTile.x)
+				collRight = true;
+		}
+	}
+
+}
+
+
+
+
 
 
 /*
@@ -208,3 +278,49 @@ Map		&GameHandler::getMap()
 	return (map);
 }
 
+
+
+/*
+	OLD VERSION:
+
+
+bool	GameHandler::checkWallCollision(Player &player, Map &map, float dt)
+{
+	sf::Vector2f	checkPoints[4];
+
+	for (int i = 0; i < 4; ++i)
+	{
+		checkPoints[i].x = player.getCoord().x + (player.getDirVec().x * player.getMoveSpeed() * dt);
+
+		if (player.getJumpState())
+			checkPoints[i].y = player.getCoord().y + (player.getDirVec().y * player.getMoveSpeed() * dt);
+		else
+			checkPoints[i].y = player.getCoord().y;
+	}
+
+	checkPoints[1].x += PLAYER_SIZE;
+	checkPoints[2].x += PLAYER_SIZE;
+	checkPoints[2].y += PLAYER_SIZE;
+	checkPoints[3].y += PLAYER_SIZE;
+
+	sf::Vector2f	collisionTile = {-100, -100};
+	sf::Vector2f	checkTile;
+
+	for (int i = 0; i < 4; ++i)
+	{
+		checkTile = {checkPoints[i].x / TILE_SIZE, checkPoints[i].y / TILE_SIZE};
+
+		if (map.getTileType(checkTile.x, checkTile.y) == WALL)
+			collisionTile = checkTile;
+	}
+
+	return (false);
+
+}
+
+
+
+
+
+
+*/

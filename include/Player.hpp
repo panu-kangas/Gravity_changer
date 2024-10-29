@@ -1,10 +1,11 @@
 #ifndef PLAYER_HPP
 # define PLAYER_HPP
 
-# include <SFML/Graphics.hpp>
 # include <iostream>
 
 # include "Constants.hpp"
+# include "Map.hpp"
+
 
 
 class Player
@@ -18,6 +19,9 @@ class Player
 	float		moveSpeed;
 	float		jumpPower;
 
+	sf::Vector2i	curTile;
+	sf::Vector2i	prevTile;
+
 	bool		isJumping;
 
 
@@ -29,10 +33,15 @@ class Player
 	void	movePlayer(float dt, float gravity);
 
 	void	setJumpState(bool state);
+	void	fixPosAfterCollision(Map &map, bool &collUp, bool &collDown, bool &collLeft, bool &collRight);
 
+
+	// These should probably not all return reference, since then they can be changed without setter!
 	sf::RectangleShape	&getSprite();
 	sf::Vector2f		&getDirVec();
 	sf::Vector2f		&getCoord();
+	sf::Vector2i		getCurTileCoord();
+	sf::Vector2i		getPrevTileCoord();
 	float				&getMoveSpeed();
 	float				&getJumpPower();
 	bool				&getJumpState();
