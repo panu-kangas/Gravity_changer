@@ -17,16 +17,15 @@ class GameHandler
 	Map		map;
 
 	float	gravity;
+	int		gravityDir;
 
 	bool	upPressed;
 //	bool	downPressed;
 	bool	rightPressed;
 	bool	leftPressed;
+	bool	spacePressed;
 
-	bool	collUp;
-	bool	collDown;
-	bool	collLeft;
-	bool	collRight;
+	bool	collFlags[4];
 
 	void	checkCollisions();
 	void	checkWallCollision();

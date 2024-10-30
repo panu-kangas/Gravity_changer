@@ -19,8 +19,8 @@ class Player
 	float		moveSpeed;
 	float		jumpPower;
 
-	sf::Vector2i	curTile;
-	sf::Vector2i	prevTile;
+//	sf::Vector2i	curTile;
+//	sf::Vector2i	prevTile;
 
 	bool		isJumping;
 
@@ -30,18 +30,18 @@ class Player
 	Player();
 	~Player() {};
 
-	void	movePlayer(float dt, float gravity);
+	void	movePlayer(float dt, float gravity, int gravityDir);
 
-	void	setJumpState(bool state);
-	void	fixPosAfterCollision(Map &map, bool &collUp, bool &collDown, bool &collLeft, bool &collRight);
+	void	setJumpState(bool state, int gravityDir);
+	void	fixPosAfterCollision(Map &map, bool *collFlags, int gravityDir);
 
 
 	// These should probably not all return reference, since then they can be changed without setter!
 	sf::RectangleShape	&getSprite();
 	sf::Vector2f		&getDirVec();
 	sf::Vector2f		&getCoord();
-	sf::Vector2i		getCurTileCoord();
-	sf::Vector2i		getPrevTileCoord();
+//	sf::Vector2i		getCurTileCoord();
+//	sf::Vector2i		getPrevTileCoord();
 	float				&getMoveSpeed();
 	float				&getJumpPower();
 	bool				&getJumpState();

@@ -7,16 +7,16 @@
 GameHandler::GameHandler()
 {
 	gravity = 0.05;
+	gravityDir = DOWN;
 
 	upPressed = false;
 //	downPressed = false;
 	rightPressed = false;
 	leftPressed = false;
+	spacePressed = false;
 
-	collUp = false;
-	collDown = false;
-	collLeft = false;
-	collRight = false;
+	for (int i = 0; i < 4; ++i)
+		collFlags[i] = false;
 
 }
 
@@ -45,8 +45,10 @@ void	GameHandler::checkInput(sf::Event &event)
 		case sf::Keyboard::Scan::W :
 			if (!player.getJumpState())
 			{
-				player.setJumpState(true);
+				player.setJumpState(true, gravityDir);
 				player.getDirVec().y = player.getJumpPower();
+				if (gravityDir == UP && player.getDirVec().y < 0)
+					player.getDirVec().y *= -1;
 			}
 			setKeypressState(true, UP); // is this needed?
 			break ;
@@ -62,6 +64,14 @@ void	GameHandler::checkInput(sf::Event &event)
 
 		case sf::Keyboard::Scan::D :
 			setKeypressState(true, RIGHT);
+			break ;
+		
+		case sf::Keyboard::Scan::Space :
+			if (spacePressed == false && gravityDir == DOWN)
+				gravityDir = UP;
+			else if (spacePressed == false && gravityDir == UP)
+				gravityDir = DOWN;
+			spacePressed = true;
 			break ;
 
 		default:
@@ -90,6 +100,10 @@ void	GameHandler::checkRelease(sf::Event &event)
 			setKeypressState(false, RIGHT);
 			break ;
 
+		case sf::Keyboard::Scan::Space :
+			spacePressed = false;
+			break ;
+
 		default:
 			return ;
 	}
@@ -115,7 +129,7 @@ void	GameHandler::updateGame(float dt)
 
 	//
 
-	player.movePlayer(dt, gravity);
+	player.movePlayer(dt, gravity, gravityDir);
 	checkCollisions();
 	
 
@@ -126,15 +140,20 @@ void	GameHandler::checkCollisions()
 {
 	checkWallCollision();
 
-	if (collUp == true || collDown == true || collLeft == true || collRight == true)
-		player.fixPosAfterCollision(map, collUp, collDown, collLeft, collRight);
+	if (collFlags[UP] == true || collFlags[DOWN] == true || \
+	collFlags[LEFT] == true || collFlags[RIGHT] == true)
+		player.fixPosAfterCollision(map, collFlags, gravityDir);
 
 
 }
 
 void	GameHandler::checkWallCollision()
 {
-	sf::Vector2i	playerTileCoord = player.getCurTileCoord();
+	sf::Vector2i	playerTileCoord;
+
+	playerTileCoord.x = floor(player.getCoord().x) / TILE_SIZE;
+	playerTileCoord.y = floor(player.getCoord().y) / TILE_SIZE;
+
 
 	for (int y = playerTileCoord.y - 1; y < playerTileCoord.y + 2; ++y)
 	{
@@ -201,17 +220,17 @@ void	GameHandler::getCollisionFlag(mapTile &tile)
 			if (collisionTile.y < playerTile.y)
 			{
 				if (map.getTileType(playerCheckPoints[i].x / TILE_SIZE, (playerCheckPoints[i].y + 10) / TILE_SIZE) == EMPTY)
-					collUp = true;
+					collFlags[UP] = true;
 			}
 			else if (collisionTile.y > playerTile.y)
 			{
 				if (map.getTileType(playerCheckPoints[i].x / TILE_SIZE, (playerCheckPoints[i].y - 10) / TILE_SIZE) == EMPTY)
-					collDown = true;
+					collFlags[DOWN] = true;
 			}
 			else if (collisionTile.x < playerTile.x)
-				collLeft = true;
+				collFlags[LEFT] = true;
 			else if(collisionTile.x > playerTile.x)
-				collRight = true;
+				collFlags[RIGHT] = true;
 		}
 	}
 
