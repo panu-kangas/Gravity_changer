@@ -34,39 +34,31 @@ Player::Player()
 
 void	Player::movePlayer(float dt, float gravity, int gravityDir)
 {
-	coord.x += dirVec.x * moveSpeed * dt;
+	// set MAX speed
 
+	if (dirVec.x > 8)
+		dirVec.x = 8;
+	else if (dirVec.x < -8)
+		dirVec.x = -8;
+	if (dirVec.y > 8)
+		dirVec.y = 8;
+	else if (dirVec.y < -8)
+		dirVec.y = -8;
+
+	coord.x += dirVec.x * moveSpeed * dt;
 	coord.y += dirVec.y * moveSpeed * dt;
+
 	if (gravityDir == DOWN)
 		dirVec.y += gravity * moveSpeed * dt;
 	else if (gravityDir == UP)
 		dirVec.y += gravity * moveSpeed * dt * -1;
+	else if (gravityDir == LEFT)
+		dirVec.x += gravity * moveSpeed * dt * -1;
+	else if (gravityDir == RIGHT)
+		dirVec.x += gravity * moveSpeed * dt;
 
-
-
-
-/*
-	if (coord.y > 624) // 624 = floor level for player
-	{
-		coord.y = 624;
-		isJumping = false;
-	}
-*/
 
 	sprite.setPosition(coord);
-
-	// Update player tile coordinates
-/*	sf::Vector2i tempTileCoord;
-
-	tempTileCoord.x = floor(coord.x) / TILE_SIZE;
-	tempTileCoord.y = floor(coord.y) / TILE_SIZE;
-
-	if (tempTileCoord.x != curTile.x || tempTileCoord.y != curTile.y)
-	{
-		prevTile = curTile;
-		curTile = tempTileCoord;
-	}
-*/
 
 }
 
@@ -75,16 +67,9 @@ void	Player::movePlayer(float dt, float gravity, int gravityDir)
 	SETTERS
 */
 
-void	Player::setJumpState(bool state, int gravityDir)
+void	Player::setJumpState(bool state)
 {
-
-//	if (gravityDir == UP && state == true)
-//		state = false;
-//	else if (gravityDir == UP && state == false)
-//		state = true;
-
 	isJumping = state;
-
 }
 
 void	Player::fixPosAfterCollision(Map &map, bool *collFlags, int gravityDir)
@@ -94,12 +79,27 @@ void	Player::fixPosAfterCollision(Map &map, bool *collFlags, int gravityDir)
 	{
 		coord.x = floor(coord.x);
 		coord.x -= (int)floor(coord.x) % PLAYER_SIZE;
+		if (gravityDir == LEFT)
+			dirVec.x = 0;
+		else if (gravityDir == RIGHT)
+		{
+			dirVec.x = 1;
+			isJumping = false;
+		}
 	}
 
 	if (dirVec.x < 0 && collFlags[LEFT] == true)
 	{
 		coord.x = floor(coord.x);
 		coord.x += PLAYER_SIZE - ((int)floor(coord.x) % PLAYER_SIZE);
+
+		if (gravityDir == RIGHT)
+			dirVec.x = 0;
+		else if (gravityDir == LEFT)
+		{
+			dirVec.x = -1;
+			isJumping = false;
+		}
 	}
 
 	if (dirVec.y < 0 && collFlags[UP] == true)

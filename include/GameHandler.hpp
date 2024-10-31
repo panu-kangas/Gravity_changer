@@ -19,12 +19,7 @@ class GameHandler
 	float	gravity;
 	int		gravityDir;
 
-	bool	upPressed;
-//	bool	downPressed;
-	bool	rightPressed;
-	bool	leftPressed;
-	bool	spacePressed;
-
+	bool	pressedKeyArr[8];
 	bool	collFlags[4];
 
 	void	checkCollisions();

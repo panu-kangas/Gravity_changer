@@ -18,6 +18,18 @@ enum direction
 	RIGHT
 };
 
+enum keys
+{
+	W,
+	A,
+	S,
+	D,
+	UPARR,
+	DOWNARR,
+	LEFTARR,
+	RIGHTARR
+};
+
 enum tiletype
 {
 	EMPTY,

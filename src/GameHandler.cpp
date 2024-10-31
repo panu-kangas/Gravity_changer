@@ -9,11 +9,8 @@ GameHandler::GameHandler()
 	gravity = 0.05;
 	gravityDir = DOWN;
 
-	upPressed = false;
-//	downPressed = false;
-	rightPressed = false;
-	leftPressed = false;
-	spacePressed = false;
+	for (int i = 0; i < 8; ++i)
+		pressedKeyArr[i] = false;
 
 	for (int i = 0; i < 4; ++i)
 		collFlags[i] = false;
@@ -45,12 +42,20 @@ void	GameHandler::checkInput(sf::Event &event)
 		case sf::Keyboard::Scan::W :
 			if (!player.getJumpState())
 			{
-				player.setJumpState(true, gravityDir);
-				player.getDirVec().y = player.getJumpPower();
+				player.setJumpState(true);
+
+				if (gravityDir == UP || gravityDir == DOWN)
+					player.getDirVec().y = player.getJumpPower();
+				else if (gravityDir == LEFT || gravityDir == RIGHT)
+					player.getDirVec().x = player.getJumpPower();
+
 				if (gravityDir == UP && player.getDirVec().y < 0)
 					player.getDirVec().y *= -1;
+				else if (gravityDir == LEFT && player.getDirVec().x < 0)
+					player.getDirVec().x *= -1;
+
 			}
-			setKeypressState(true, UP); // is this needed?
+			setKeypressState(true, W); // is this needed?
 			break ;
 
 //		case sf::Keyboard::Scan::S :
@@ -59,24 +64,59 @@ void	GameHandler::checkInput(sf::Event &event)
 //			break ;
 
 		case sf::Keyboard::Scan::A :
-			setKeypressState(true, LEFT);
+			setKeypressState(true, A);
 			break ;
 
 		case sf::Keyboard::Scan::D :
-			setKeypressState(true, RIGHT);
-			break ;
-		
-		case sf::Keyboard::Scan::Space :
-			if (spacePressed == false && gravityDir == DOWN)
-				gravityDir = UP;
-			else if (spacePressed == false && gravityDir == UP)
-				gravityDir = DOWN;
-			spacePressed = true;
+			setKeypressState(true, D);
 			break ;
 
 		default:
-			return ;
+			break ;
 	}
+
+	switch (event.key.code)
+	{
+		case sf::Keyboard::Up :
+			if (pressedKeyArr[UPARR] == false && gravityDir != UP)
+			{
+				gravityDir = UP;
+				setKeypressState(true, UPARR);
+				player.setJumpState(true);
+			}
+			break ;
+		
+		case sf::Keyboard::Down :
+			if (pressedKeyArr[DOWNARR] == false && gravityDir != DOWN)
+			{
+				gravityDir = DOWN;
+				setKeypressState(true, DOWNARR);
+				player.setJumpState(true);
+			}
+			break ;
+
+		case sf::Keyboard::Left :
+			if (pressedKeyArr[LEFTARR] == false && gravityDir != LEFT)
+			{
+				gravityDir = LEFT;
+				setKeypressState(true, LEFTARR);
+				player.setJumpState(true);
+			}
+			break ;
+
+		case sf::Keyboard::Right :
+			if (pressedKeyArr[RIGHTARR] == false && gravityDir != RIGHT)
+			{
+				gravityDir = RIGHT;
+				setKeypressState(true, RIGHTARR);
+				player.setJumpState(true);
+			}
+			break ;
+
+		default :
+			break ;
+	}
+
 
 }
 
@@ -85,7 +125,7 @@ void	GameHandler::checkRelease(sf::Event &event)
 	switch (event.key.scancode)
 	{
 		case sf::Keyboard::Scan::W :
-			setKeypressState(false, UP);
+			setKeypressState(false, W);
 			break ;
 
 //		case sf::Keyboard::Scan::S :
@@ -93,19 +133,37 @@ void	GameHandler::checkRelease(sf::Event &event)
 //			break ;
 
 		case sf::Keyboard::Scan::A :
-			setKeypressState(false, LEFT);
+			setKeypressState(false, A);
 			break ;
 
 		case sf::Keyboard::Scan::D :
-			setKeypressState(false, RIGHT);
-			break ;
-
-		case sf::Keyboard::Scan::Space :
-			spacePressed = false;
+			setKeypressState(false, D);
 			break ;
 
 		default:
-			return ;
+			break ;
+	}
+
+	switch (event.key.code)
+	{
+		case sf::Keyboard::Up :
+			setKeypressState(false, UPARR);
+			break ;
+		
+		case sf::Keyboard::Down :
+			setKeypressState(false, DOWNARR);
+			break ;
+
+		case sf::Keyboard::Left :
+			setKeypressState(false, LEFTARR);
+			break ;
+
+		case sf::Keyboard::Right :
+			setKeypressState(false, RIGHTARR);
+			break ;
+
+		default :
+			break ;
 	}
 }
 
@@ -117,20 +175,50 @@ void	GameHandler::checkRelease(sf::Event &event)
 
 void	GameHandler::updateGame(float dt)
 {
+
 	// MOVE THIS TO OWN FUNCTION
 
-	if (leftPressed)
-		player.getDirVec().x = -1;
-	else if (rightPressed)
-		player.getDirVec().x = 1;
+	static bool	hasMoved;
+
+	if (pressedKeyArr[A])
+	{
+		if (gravityDir == UP || gravityDir == DOWN)
+			player.getDirVec().x = -1;
+		else if (gravityDir == RIGHT)
+			player.getDirVec().y = 1;
+		else if (gravityDir == LEFT)
+			player.getDirVec().y = -1;
+	}
+	else if (pressedKeyArr[D])
+	{
+		if (gravityDir == UP || gravityDir == DOWN)
+			player.getDirVec().x = 1;
+		else if (gravityDir == RIGHT)
+			player.getDirVec().y = -1;
+		else if (gravityDir == LEFT)
+			player.getDirVec().y = 1;
+	}
 	
-	if (!leftPressed && !rightPressed)
-		player.getDirVec().x = 0;
+	if (!pressedKeyArr[A] && !pressedKeyArr[D])
+	{
+		if (gravityDir == UP || gravityDir == DOWN)
+			player.getDirVec().x = 0;
+		else if (gravityDir == LEFT || gravityDir == RIGHT)
+			player.getDirVec().y = 0;
+	}
+
+	// trying to fix "falls in the start" -bug
+	// !!! ADD ARROW KEYS ALSO HERE !!!
+	if (hasMoved == false && (pressedKeyArr[W] || pressedKeyArr[A] || pressedKeyArr[D]))
+		hasMoved = true;
 
 	//
 
-	player.movePlayer(dt, gravity, gravityDir);
-	checkCollisions();
+	if (hasMoved == true)
+	{
+		player.movePlayer(dt, gravity, gravityDir);
+		checkCollisions();
+	}
 	
 
 
@@ -153,7 +241,6 @@ void	GameHandler::checkWallCollision()
 
 	playerTileCoord.x = floor(player.getCoord().x) / TILE_SIZE;
 	playerTileCoord.y = floor(player.getCoord().y) / TILE_SIZE;
-
 
 	for (int y = playerTileCoord.y - 1; y < playerTileCoord.y + 2; ++y)
 	{
@@ -217,27 +304,44 @@ void	GameHandler::getCollisionFlag(mapTile &tile)
 			
 			// How to fix this?
 
-			if (collisionTile.y < playerTile.y)
+			if (gravityDir == UP || gravityDir == DOWN)
 			{
-				if (map.getTileType(playerCheckPoints[i].x / TILE_SIZE, (playerCheckPoints[i].y + 10) / TILE_SIZE) == EMPTY)
-					collFlags[UP] = true;
+				if (collisionTile.y < playerTile.y)
+				{
+					if (map.getTileType(playerCheckPoints[i].x / TILE_SIZE, (playerCheckPoints[i].y + 10) / TILE_SIZE) == EMPTY)
+						collFlags[UP] = true;
+				}
+				else if (collisionTile.y > playerTile.y)
+				{
+					if (map.getTileType(playerCheckPoints[i].x / TILE_SIZE, (playerCheckPoints[i].y - 10) / TILE_SIZE) == EMPTY)
+						collFlags[DOWN] = true;
+				}
+				else if (collisionTile.x < playerTile.x)
+					collFlags[LEFT] = true;
+				else if(collisionTile.x > playerTile.x)
+					collFlags[RIGHT] = true;
 			}
-			else if (collisionTile.y > playerTile.y)
+			else
 			{
-				if (map.getTileType(playerCheckPoints[i].x / TILE_SIZE, (playerCheckPoints[i].y - 10) / TILE_SIZE) == EMPTY)
+				if (collisionTile.x < playerTile.x)
+				{
+					if (map.getTileType((playerCheckPoints[i].x + 10) / TILE_SIZE, playerCheckPoints[i].y / TILE_SIZE) == EMPTY)
+						collFlags[LEFT] = true;
+				}
+				else if(collisionTile.x > playerTile.x)
+				{
+					if (map.getTileType((playerCheckPoints[i].x - 10) / TILE_SIZE, playerCheckPoints[i].y / TILE_SIZE) == EMPTY)
+						collFlags[RIGHT] = true;
+				}
+				else if (collisionTile.y < playerTile.y)
+					collFlags[UP] = true;
+				else if (collisionTile.y > playerTile.y)
 					collFlags[DOWN] = true;
 			}
-			else if (collisionTile.x < playerTile.x)
-				collFlags[LEFT] = true;
-			else if(collisionTile.x > playerTile.x)
-				collFlags[RIGHT] = true;
 		}
 	}
 
 }
-
-
-
 
 
 
@@ -264,20 +368,9 @@ void	GameHandler::drawGame(sf::RenderWindow &window)
 */
 
 
-void	GameHandler::setKeypressState(bool state, int direction)
+void	GameHandler::setKeypressState(bool state, int key)
 {
-	if (direction == UP)
-		upPressed = state;
-	else if (direction == LEFT)
-		leftPressed = state;
-	else if (direction == RIGHT)
-		rightPressed = state;
-
-	/*
-	else if (direction == DOWN)
-		downPressed = state;
-	*/
-
+	pressedKeyArr[key] = state;
 }
 
 

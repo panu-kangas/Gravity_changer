@@ -32,7 +32,7 @@ class Player
 
 	void	movePlayer(float dt, float gravity, int gravityDir);
 
-	void	setJumpState(bool state, int gravityDir);
+	void	setJumpState(bool state);
 	void	fixPosAfterCollision(Map &map, bool *collFlags, int gravityDir);
 
 
