@@ -4,6 +4,7 @@
 # include <iostream>
 
 # include "Constants.hpp"
+# include "Collectible.hpp"
 # include "Player.hpp"
 # include "Map.hpp"
 
@@ -13,8 +14,11 @@ class GameHandler
 {
 	private:
 
-	Player	player;
-	Map		map;
+	Player		player;
+	Map			map;
+	Collectible	collectible;
+
+	sf::Clock	gravityClock;
 
 	float	gravity;
 	int		gravityDir;
@@ -47,8 +51,9 @@ class GameHandler
 
 	void	setKeypressState(bool state, int direction);
 
-	Player	&getPlayer();
-	Map		&getMap();
+	Player		&getPlayer();
+	Map			&getMap();
+	Collectible &getCollectible();
 
 };
 

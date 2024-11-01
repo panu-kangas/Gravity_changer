@@ -20,7 +20,7 @@ GameHandler::GameHandler()
 
 
 /*
-	INITIALIZATION
+	INITIALIZATION, is this needed...?
 */
 
 void	GameHandler::initGame()
@@ -75,6 +75,12 @@ void	GameHandler::checkInput(sf::Event &event)
 			break ;
 	}
 
+	sf::Time gravityTime = gravityClock.getElapsedTime();
+
+	if (gravityTime.asSeconds() < 3.0)
+		return ;
+	
+
 	switch (event.key.code)
 	{
 		case sf::Keyboard::Up :
@@ -83,6 +89,7 @@ void	GameHandler::checkInput(sf::Event &event)
 				gravityDir = UP;
 				setKeypressState(true, UPARR);
 				player.setJumpState(true);
+				gravityClock.restart();
 			}
 			break ;
 		
@@ -92,6 +99,7 @@ void	GameHandler::checkInput(sf::Event &event)
 				gravityDir = DOWN;
 				setKeypressState(true, DOWNARR);
 				player.setJumpState(true);
+				gravityClock.restart();
 			}
 			break ;
 
@@ -101,6 +109,7 @@ void	GameHandler::checkInput(sf::Event &event)
 				gravityDir = LEFT;
 				setKeypressState(true, LEFTARR);
 				player.setJumpState(true);
+				gravityClock.restart();
 			}
 			break ;
 
@@ -110,6 +119,7 @@ void	GameHandler::checkInput(sf::Event &event)
 				gravityDir = RIGHT;
 				setKeypressState(true, RIGHTARR);
 				player.setJumpState(true);
+				gravityClock.restart();
 			}
 			break ;
 
@@ -231,6 +241,9 @@ void	GameHandler::checkCollisions()
 	if (collFlags[UP] == true || collFlags[DOWN] == true || \
 	collFlags[LEFT] == true || collFlags[RIGHT] == true)
 		player.fixPosAfterCollision(map, collFlags, gravityDir);
+	
+	if (player.getSprite().getGlobalBounds().intersects(collectible.getSprite().getGlobalBounds()))
+		collectible.createNewCollectible(map);
 
 
 }
@@ -353,12 +366,11 @@ void	GameHandler::getCollisionFlag(mapTile &tile)
 void	GameHandler::drawGame(sf::RenderWindow &window)
 {
 
-	// MAP
-
 	map.drawMap(window);
 
-	// PLAYER
 	window.draw(player.getSprite());
+
+	collectible.drawCollectible(window);
 
 }
 
@@ -389,6 +401,12 @@ Map		&GameHandler::getMap()
 {
 	return (map);
 }
+
+Collectible &GameHandler::getCollectible()
+{
+	return (collectible);
+}
+
 
 
 

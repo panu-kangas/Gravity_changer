@@ -6,8 +6,9 @@
 
 # define TILE_SIZE 32
 # define PLAYER_SIZE 16
+# define COLLECT_SIZE 12
 
-# include <SFML/Graphics.hpp> // this is not a good place for this...!
+# include <SFML/Graphics.hpp> // this might not be a good place for this...?
 
 
 enum direction

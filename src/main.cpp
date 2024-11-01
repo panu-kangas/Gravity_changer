@@ -10,6 +10,7 @@ int main()
 	GameHandler game;
 
 	game.getMap().initMap();
+	game.getCollectible().createNewCollectible(game.getMap());
 	
 
 	sf::Clock	deltaClock;
