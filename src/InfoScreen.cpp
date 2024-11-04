@@ -12,8 +12,8 @@ InfoScreen::InfoScreen()
 	size.x = 500;
 	size.y = 70;
 
-	coord.x = (WINDOW_WIDTH / 2) - (size.x / 2);
-	coord.y = WINDOW_HEIGHT - size.y - 10;
+	coord.x = (GAME_WIDTH / 2) - (size.x / 2);
+	coord.y = GAME_HEIGHT - size.y - 10;
 
 	background.setSize(size);
 	background.setPosition(coord);

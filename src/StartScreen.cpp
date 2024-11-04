@@ -16,20 +16,20 @@ StartScreen::StartScreen()
 	title.setFont(pixelFont);
 	title.setFillColor({235, 168, 14});
 	title.setCharacterSize(50);
-	title.setPosition(WINDOW_WIDTH / 2 - 260, WINDOW_HEIGHT / 2 - 200);
+	title.setPosition(GAME_WIDTH / 2 - 260, GAME_HEIGHT / 2 - 200);
 	title.setString("GRAVITY CHANGER");
 
 	titleBG.setSize({535, 80});
 	titleBG.setFillColor(sf::Color::Transparent);
-	titleBG.setPosition(WINDOW_WIDTH / 2 - 280, WINDOW_HEIGHT / 2 - 210);
+	titleBG.setPosition(GAME_WIDTH / 2 - 280, GAME_HEIGHT / 2 - 210);
 
 	pressEnter.setFont(pixelFont);
 	pressEnter.setFillColor({235, 168, 14});
 	pressEnter.setCharacterSize(20);
-	pressEnter.setPosition(WINDOW_WIDTH / 2 - 110, WINDOW_HEIGHT / 2 + 100);
+	pressEnter.setPosition(GAME_WIDTH / 2 - 110, GAME_HEIGHT / 2 + 100);
 	pressEnter.setString("Press Enter to start");
 
-	moveSpeed = 100;
+	moveSpeed = 80;
 
 	// Animated shapes around the title
 

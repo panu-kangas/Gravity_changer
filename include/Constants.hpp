@@ -1,8 +1,8 @@
 #ifndef CONSTANTS_HPP
 # define CONSTANTS_HPP
 
-# define WINDOW_WIDTH 1056
-# define WINDOW_HEIGHT 736
+# define GAME_WIDTH 1056
+# define GAME_HEIGHT 736
 
 # define TILE_SIZE 32
 # define PLAYER_SIZE 16

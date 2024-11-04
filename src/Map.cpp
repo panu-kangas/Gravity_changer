@@ -31,12 +31,12 @@ void	Map::readMap()
 	mapTile tempTile;
 	std::vector<mapTile> tempVec;
 
-	for (int y = 0; y < WINDOW_HEIGHT; y += TILE_SIZE)
+	for (int y = 0; y < GAME_HEIGHT; y += TILE_SIZE)
 	{
-		for (int x = 0; x < WINDOW_WIDTH; x += TILE_SIZE)
+		for (int x = 0; x < GAME_WIDTH; x += TILE_SIZE)
 		{
 			if (y > 608 || y == 0 \
-			|| x == 0 || x == WINDOW_WIDTH - TILE_SIZE \
+			|| x == 0 || x == GAME_WIDTH - TILE_SIZE \
 			|| (y == 32 && x == 160) \
 			|| (y == 64 && x == 192)
 			|| (y == 576 && x == 192) \
