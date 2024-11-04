@@ -37,6 +37,12 @@ enum tiletype
 	WALL
 };
 
+enum gamestates
+{
+	STARTSCREEN,
+	GAME
+};
+
 struct mapTile
 {
 	int	type;

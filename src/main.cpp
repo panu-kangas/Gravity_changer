@@ -22,7 +22,12 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
 
-			if (event.type == sf::Event::KeyPressed)
+			if (game.getGameState() == STARTSCREEN && event.type == sf::Event::KeyPressed)
+			{
+				if (event.key.code == sf::Keyboard::Enter)
+					game.setGameState(GAME);
+			}
+			else if (event.type == sf::Event::KeyPressed)
 				game.checkInput(event);
 			else if (event.type == sf::Event::KeyReleased)
 				game.checkRelease(event);
@@ -36,9 +41,13 @@ int main()
 
         window.clear();
 
-		game.updateGame(dt.asSeconds());
-
-		game.drawGame(window);
+		if (game.getGameState() == STARTSCREEN)
+			game.drawStartScreen(window, dt.asSeconds());
+		else
+		{
+			game.updateGame(dt.asSeconds());
+			game.drawGame(window);
+		}
 
         window.display();
     }

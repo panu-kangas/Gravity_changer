@@ -15,6 +15,8 @@ GameHandler::GameHandler()
 	for (int i = 0; i < 4; ++i)
 		collFlags[i] = false;
 
+	gameState = STARTSCREEN;
+
 }
 
 
@@ -234,6 +236,10 @@ void	GameHandler::updateGame(float dt)
 
 }
 
+
+// CREATE A COLLISION HANDLER CLASS...?
+// Would be nice to get the collision handling code to somewhere else
+
 void	GameHandler::checkCollisions()
 {
 	checkWallCollision();
@@ -243,7 +249,10 @@ void	GameHandler::checkCollisions()
 		player.fixPosAfterCollision(map, collFlags, gravityDir);
 	
 	if (player.getSprite().getGlobalBounds().intersects(collectible.getSprite().getGlobalBounds()))
+	{
 		collectible.createNewCollectible(map);
+		info.addScore(100);
+	}
 
 
 }
@@ -362,6 +371,12 @@ void	GameHandler::getCollisionFlag(mapTile &tile)
 	DRAW
 */
 
+void	GameHandler::drawStartScreen(sf::RenderWindow &window, float dt)
+{
+	startscreen.drawScreen(window, dt);
+}
+
+
 
 void	GameHandler::drawGame(sf::RenderWindow &window)
 {
@@ -371,6 +386,8 @@ void	GameHandler::drawGame(sf::RenderWindow &window)
 	window.draw(player.getSprite());
 
 	collectible.drawCollectible(window);
+
+	info.drawInfoScreen(window);
 
 }
 
@@ -384,6 +401,12 @@ void	GameHandler::setKeypressState(bool state, int key)
 {
 	pressedKeyArr[key] = state;
 }
+
+void	GameHandler::setGameState(int newState)
+{
+	gameState = newState;
+}
+
 
 
 
@@ -406,6 +429,12 @@ Collectible &GameHandler::getCollectible()
 {
 	return (collectible);
 }
+
+int		GameHandler::getGameState()
+{
+	return (gameState);
+}
+
 
 
 
