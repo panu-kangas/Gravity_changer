@@ -4,8 +4,29 @@
 
 int main()
 {
-    auto window = sf::RenderWindow({WINDOW_WIDTH, WINDOW_HEIGHT}, "Platformer");
+
+	sf::Vector2i monitorSize;
+
+	monitorSize.x = sf::VideoMode::getDesktopMode().width;
+	monitorSize.y = sf::VideoMode::getDesktopMode().height;
+
+    auto window = sf::RenderWindow({GAME_WIDTH, GAME_HEIGHT}, "Platformer");
     window.setFramerateLimit(144);
+
+	// Fix game window size
+	sf::Vector2u gameWindowSize;
+	gameWindowSize.x = monitorSize.x * 0.7;
+	gameWindowSize.y = monitorSize.y * 0.7;
+
+	window.setSize(gameWindowSize);
+
+	// Center window
+	sf::Vector2i	intGameWindowSize;
+	intGameWindowSize.x = gameWindowSize.x;
+	intGameWindowSize.y = gameWindowSize.y;
+
+	window.setPosition({intGameWindowSize.x / 2 - GAME_WIDTH / 2, intGameWindowSize.y / 2 - GAME_HEIGHT / 2});
+
 
 	GameHandler game;
 

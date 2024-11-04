@@ -29,18 +29,18 @@ void	Collectible::createNewCollectible(Map &map)
 
 	while (1)
 	{
-		x = rand() % (WINDOW_WIDTH / TILE_SIZE);
-		y = rand() % (WINDOW_HEIGHT / TILE_SIZE);
+		x = rand() % (GAME_WIDTH / TILE_SIZE);
+		y = rand() % (GAME_HEIGHT / TILE_SIZE);
 
 		if (tileVec[y][x].type == WALL)
 		{
 			if (x > 0 && tileVec[y][x - 1].type == EMPTY)
 				break ;
-			else if (x < (WINDOW_WIDTH / TILE_SIZE - 1) && tileVec[y][x + 1].type == EMPTY)
+			else if (x < (GAME_WIDTH / TILE_SIZE - 1) && tileVec[y][x + 1].type == EMPTY)
 				break ;
 			else if (y > 0 && tileVec[y - 1][x].type == EMPTY)
 				break ;
-			else if (y < (WINDOW_HEIGHT / TILE_SIZE - 1) && tileVec[y + 1][x].type == EMPTY)
+			else if (y < (GAME_HEIGHT / TILE_SIZE - 1) && tileVec[y + 1][x].type == EMPTY)
 				break ;
 		}
 	}
@@ -62,7 +62,7 @@ void	Collectible::createNewCollectible(Map &map)
 				break ;
 			
 			case DOWN :
-				if (y < (WINDOW_HEIGHT / TILE_SIZE - 1) && tileVec[y + 1][x].type == EMPTY)
+				if (y < (GAME_HEIGHT / TILE_SIZE - 1) && tileVec[y + 1][x].type == EMPTY)
 				{
 					setNewCoord(x, y, DOWN);
 					coordinateSet = true;
@@ -79,7 +79,7 @@ void	Collectible::createNewCollectible(Map &map)
 				break ;
 
 			case RIGHT :
-				if (x < (WINDOW_WIDTH / TILE_SIZE - 1) && tileVec[y][x + 1].type == EMPTY)
+				if (x < (GAME_WIDTH / TILE_SIZE - 1) && tileVec[y][x + 1].type == EMPTY)
 				{
 					setNewCoord(x, y, RIGHT);
 					coordinateSet = true;

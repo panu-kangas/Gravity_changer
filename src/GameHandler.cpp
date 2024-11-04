@@ -1,4 +1,5 @@
 #include "GameHandler.hpp"
+#include <math.h>
 
 /*
 	CONSTRUCTOR
@@ -266,12 +267,12 @@ void	GameHandler::checkWallCollision()
 
 	for (int y = playerTileCoord.y - 1; y < playerTileCoord.y + 2; ++y)
 	{
-		if (y < 0 || y >= (WINDOW_HEIGHT / TILE_SIZE))
+		if (y < 0 || y >= (GAME_HEIGHT / TILE_SIZE))
 			continue ;
 			
 		for (int x = playerTileCoord.x - 1; x < playerTileCoord.x + 2; ++x)
 		{
-			if (x < 0 || x >= (WINDOW_WIDTH / TILE_SIZE))
+			if (x < 0 || x >= (GAME_WIDTH / TILE_SIZE))
 				continue ;
 			
 			mapTile &tile = map.getTileVec()[y][x];
