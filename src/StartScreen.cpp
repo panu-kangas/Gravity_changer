@@ -16,9 +16,10 @@ StartScreen::StartScreen()
 	title.setFont(pixelFont);
 	title.setFillColor({235, 168, 14});
 	title.setCharacterSize(50);
-	title.setPosition(GAME_WIDTH / 2 - 260, GAME_HEIGHT / 2 - 200);
 	title.setString("GRAVITY CHANGER");
+	title.setPosition(GAME_WIDTH / 2 - 260, GAME_HEIGHT / 2 - 200);
 
+	// NOT NEEDED! Use title.getGlobalBounds() instead
 	titleBG.setSize({535, 80});
 	titleBG.setFillColor(sf::Color::Transparent);
 	titleBG.setPosition(GAME_WIDTH / 2 - 280, GAME_HEIGHT / 2 - 210);
@@ -26,8 +27,9 @@ StartScreen::StartScreen()
 	pressEnter.setFont(pixelFont);
 	pressEnter.setFillColor({235, 168, 14});
 	pressEnter.setCharacterSize(20);
-	pressEnter.setPosition(GAME_WIDTH / 2 - 110, GAME_HEIGHT / 2 + 100);
 	pressEnter.setString("Press Enter to start");
+	pressEnter.setPosition(GAME_WIDTH / 2 - pressEnter.getGlobalBounds().width / 2, 
+	GAME_HEIGHT / 2 + 100);
 
 	moveSpeed = 80;
 

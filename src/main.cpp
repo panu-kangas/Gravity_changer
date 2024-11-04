@@ -4,7 +4,6 @@
 
 int main()
 {
-
 	sf::Vector2i monitorSize;
 
 	monitorSize.x = sf::VideoMode::getDesktopMode().width;
@@ -15,6 +14,7 @@ int main()
 
 	// Fix game window size
 	sf::Vector2u gameWindowSize;
+
 	gameWindowSize.x = monitorSize.x * 0.7;
 	gameWindowSize.y = monitorSize.y * 0.7;
 
@@ -25,13 +25,11 @@ int main()
 	intGameWindowSize.x = gameWindowSize.x;
 	intGameWindowSize.y = gameWindowSize.y;
 
-	window.setPosition({intGameWindowSize.x / 2 - GAME_WIDTH / 2, intGameWindowSize.y / 2 - GAME_HEIGHT / 2});
+	window.setPosition({monitorSize.x / 2 - GAME_WIDTH / 2, monitorSize.y / 2 - GAME_HEIGHT / 2});
 
 	// Set game
 	GameHandler game;
-
 	game.getMap().initMap();
-	game.getCollectible().createNewCollectible(game.getMap());
 
 	sf::Clock	deltaClock;
 
@@ -42,12 +40,13 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
 
-			if (game.getGameState() == STARTSCREEN && event.type == sf::Event::KeyPressed)
+			if ((game.getGameState() == STARTSCREEN || game.getGameState() == END) 
+			&& event.type == sf::Event::KeyPressed)
 			{
 				if (event.key.code == sf::Keyboard::Enter)
 				{
 					game.setGameState(GAME);
-					game.getInfoScreen().restartGameClock();
+					game.initGame();
 				}
 			}
 			else if (event.type == sf::Event::KeyPressed)

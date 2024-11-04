@@ -10,7 +10,7 @@
 Player::Player()
 {
 	dirVec = {0, 0};
-	moveSpeed = 130;
+	moveSpeed = 150;
 	coord = {100, 624}; // 640 (start of floor) - 16 (player size) = 624
 	jumpPower = -3;
 
@@ -36,31 +36,44 @@ void	Player::movePlayer(float dt, float gravity, int gravityDir)
 {
 	// set MAX speed
 
-	if (dirVec.x > 8)
-		dirVec.x = 8;
-	else if (dirVec.x < -8)
-		dirVec.x = -8;
-	if (dirVec.y > 8)
-		dirVec.y = 8;
-	else if (dirVec.y < -8)
-		dirVec.y = -8;
+	if (dirVec.x > 6)
+		dirVec.x = 6;
+	else if (dirVec.x < -6)
+		dirVec.x = -6;
+	if (dirVec.y > 6)
+		dirVec.y = 6;
+	else if (dirVec.y < -6)
+		dirVec.y = -6;
 
-	coord.x += dirVec.x * moveSpeed * dt;
-	coord.y += dirVec.y * moveSpeed * dt;
+	coord.x += dirVec.x * (moveSpeed + 20) * dt;
+	coord.y += dirVec.y * (moveSpeed + 20) * dt;
 
 	if (gravityDir == DOWN)
-		dirVec.y += gravity * moveSpeed * dt;
+		dirVec.y += gravity * (moveSpeed - 10) * dt;
 	else if (gravityDir == UP)
-		dirVec.y += gravity * moveSpeed * dt * -1;
+		dirVec.y += gravity * (moveSpeed - 10) * dt * -1;
 	else if (gravityDir == LEFT)
-		dirVec.x += gravity * moveSpeed * dt * -1;
+		dirVec.x += gravity * (moveSpeed - 10) * dt * -1;
 	else if (gravityDir == RIGHT)
-		dirVec.x += gravity * moveSpeed * dt;
+		dirVec.x += gravity * (moveSpeed - 10) * dt;
 
 
 	sprite.setPosition(coord);
 
 }
+
+
+/*
+	RESET
+*/
+
+void	Player::resetPlayer()
+{
+	coord = {100, 624};
+	dirVec = {0, 0};
+	isJumping = false;
+}
+
 
 
 /*

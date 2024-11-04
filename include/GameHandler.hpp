@@ -9,6 +9,7 @@
 # include "Map.hpp"
 # include "InfoScreen.hpp"
 # include "StartScreen.hpp"
+# include "EndScreen.hpp"
 
 
 class GameHandler
@@ -20,6 +21,7 @@ class GameHandler
 	Collectible	collectible;
 	InfoScreen	info;
 	StartScreen	startscreen;
+	EndScreen	end;
 
 	sf::Clock	gravityClock;
 

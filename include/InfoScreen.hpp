@@ -34,9 +34,10 @@ class InfoScreen
 	void	addScore(unsigned int addition);
 	void	update(float gravityTime);
 
-	void	restartGameClock();
+	void	resetInfo();
 
 	float	getCurGameTime();
+	int		getScore();
 
 
 };

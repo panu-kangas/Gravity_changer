@@ -24,13 +24,18 @@ GameHandler::GameHandler()
 
 
 /*
-	INITIALIZATION, is this needed...?
+	INITIALIZATION
 */
 
 void	GameHandler::initGame()
 {
-
-
+	// FIX: Collectible should NOT land on player
+	collectible.createNewCollectible(map);
+	player.resetPlayer();
+	info.resetInfo();
+	end.getScoreString() = "";
+	gravityDir = DOWN;
+	firstGravityChange = false;
 }
 
 
@@ -86,7 +91,7 @@ void	GameHandler::checkInput(sf::Event &event)
 
 	// GRAVITY
 
-	if (firstGravityChange && gravityClock.getElapsedTime().asSeconds() < 3.0)
+	if (firstGravityChange && gravityClock.getElapsedTime().asSeconds() < 2.5)
 		return ;
 	
 	switch (event.key.code)
@@ -198,7 +203,10 @@ void	GameHandler::updateGame(float dt)
 {
 
 	if (info.getCurGameTime() <= 0)
+	{
 		gameState = END;
+		return ;
+	}
 
 	// MOVE THIS TO OWN FUNCTION
 
@@ -237,7 +245,7 @@ void	GameHandler::updateGame(float dt)
 	}
 
 	if (!firstGravityChange)
-		info.update(3.0);
+		info.update(2.5);
 	else
 		info.update(gravityClock.getElapsedTime().asSeconds());
 
@@ -338,12 +346,12 @@ void	GameHandler::getCollisionFlag(mapTile &tile)
 			{
 				if (collisionTile.y < playerTile.y)
 				{
-					if (map.getTileType(playerCheckPoints[i].x / TILE_SIZE, (playerCheckPoints[i].y + 10) / TILE_SIZE) == EMPTY)
+					if (map.getTileType(playerCheckPoints[i].x / TILE_SIZE, (playerCheckPoints[i].y + 30) / TILE_SIZE) == EMPTY)
 						collFlags[UP] = true;
 				}
 				else if (collisionTile.y > playerTile.y)
 				{
-					if (map.getTileType(playerCheckPoints[i].x / TILE_SIZE, (playerCheckPoints[i].y - 10) / TILE_SIZE) == EMPTY)
+					if (map.getTileType(playerCheckPoints[i].x / TILE_SIZE, (playerCheckPoints[i].y - 30) / TILE_SIZE) == EMPTY)
 						collFlags[DOWN] = true;
 				}
 				else if (collisionTile.x < playerTile.x)
@@ -355,12 +363,12 @@ void	GameHandler::getCollisionFlag(mapTile &tile)
 			{
 				if (collisionTile.x < playerTile.x)
 				{
-					if (map.getTileType((playerCheckPoints[i].x + 10) / TILE_SIZE, playerCheckPoints[i].y / TILE_SIZE) == EMPTY)
+					if (map.getTileType((playerCheckPoints[i].x + 30) / TILE_SIZE, playerCheckPoints[i].y / TILE_SIZE) == EMPTY)
 						collFlags[LEFT] = true;
 				}
 				else if(collisionTile.x > playerTile.x)
 				{
-					if (map.getTileType((playerCheckPoints[i].x - 10) / TILE_SIZE, playerCheckPoints[i].y / TILE_SIZE) == EMPTY)
+					if (map.getTileType((playerCheckPoints[i].x - 30) / TILE_SIZE, playerCheckPoints[i].y / TILE_SIZE) == EMPTY)
 						collFlags[RIGHT] = true;
 				}
 				else if (collisionTile.y < playerTile.y)
@@ -386,23 +394,10 @@ void	GameHandler::drawStartScreen(sf::RenderWindow &window, float dt)
 
 void	GameHandler::drawEndScreen(sf::RenderWindow &window)
 {
+	if (end.getScoreString().empty())
+		end.setScoreString(info.getScore());
 
-	return ;
-	
-	sf::Text	endText;
-
-	// SET FONT
-	endText.setCharacterSize(70);
-	endText.setFillColor({235, 168, 14});
-	endText.setPosition(200, 200);
-	endText.setString("GAME OVER");
-
-	/*
-	window.getSize().x / 2 - endText.getGlobalBounds().width / 2, 
-	window.getSize().y / 2 - endText.getGlobalBounds().height / 2
-	*/
-
-	window.draw(endText);
+	end.draw(window);
 }
 
 
@@ -410,6 +405,8 @@ void	GameHandler::drawEndScreen(sf::RenderWindow &window)
 
 void	GameHandler::drawGame(sf::RenderWindow &window)
 {
+	if (gameState == END)
+		return ;
 
 	map.drawMap(window);
 

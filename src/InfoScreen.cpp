@@ -40,7 +40,7 @@ InfoScreen::InfoScreen()
 	gameTimerText.setCharacterSize(20);
 	gameTimerText.setPosition(coord.x + 150, coord.y + 2);
 	gameTimerText.setString("TIME LEFT:\n30:00");
-	curGameTime = 5.0;
+	curGameTime = 20.0;
 
 	// Gravity timer
 	gravityTimerText.setFont(pixelFont);
@@ -96,6 +96,8 @@ void	InfoScreen::update(float gravityTime)
 	// TIMER
 	curGameTime -= gameClock.getElapsedTime().asSeconds();
 	gameClock.restart();
+	if (curGameTime < 0)
+		curGameTime = 0;
 
 	float	seconds;
 	seconds = (curGameTime - floor(curGameTime)) * 60;
@@ -109,9 +111,7 @@ void	InfoScreen::update(float gravityTime)
 
 	// GRAVITY METER
 	float	len;
-
-	len = (gravityTime / 3) * 185;
-
+	len = (gravityTime / 2.5) * 185;
 	if (len >= 185)
 	{
 		len = 185;
@@ -123,8 +123,11 @@ void	InfoScreen::update(float gravityTime)
 	gravityMeter.setSize({len, 10});
 }
 
-void	InfoScreen::restartGameClock()
+void	InfoScreen::resetInfo()
 {
+	scoreCount = 0;
+	curGameTime = 20.0;
+	scoreText.setString("SCORE:\n0");
 	gameClock.restart();
 }
 
@@ -132,4 +135,10 @@ float	InfoScreen::getCurGameTime()
 {
 	return (curGameTime);
 }
+
+int		InfoScreen::getScore()
+{
+	return (scoreCount);
+}
+
 
