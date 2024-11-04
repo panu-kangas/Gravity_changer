@@ -27,12 +27,11 @@ int main()
 
 	window.setPosition({intGameWindowSize.x / 2 - GAME_WIDTH / 2, intGameWindowSize.y / 2 - GAME_HEIGHT / 2});
 
-
+	// Set game
 	GameHandler game;
 
 	game.getMap().initMap();
 	game.getCollectible().createNewCollectible(game.getMap());
-	
 
 	sf::Clock	deltaClock;
 
@@ -46,7 +45,10 @@ int main()
 			if (game.getGameState() == STARTSCREEN && event.type == sf::Event::KeyPressed)
 			{
 				if (event.key.code == sf::Keyboard::Enter)
+				{
 					game.setGameState(GAME);
+					game.getInfoScreen().restartGameClock();
+				}
 			}
 			else if (event.type == sf::Event::KeyPressed)
 				game.checkInput(event);
@@ -64,6 +66,8 @@ int main()
 
 		if (game.getGameState() == STARTSCREEN)
 			game.drawStartScreen(window, dt.asSeconds());
+		else if (game.getGameState() == END)
+			game.drawEndScreen(window);
 		else
 		{
 			game.updateGame(dt.asSeconds());

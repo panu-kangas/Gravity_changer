@@ -28,13 +28,13 @@ class GameHandler
 
 	bool	pressedKeyArr[8];
 	bool	collFlags[4];
+	bool	firstGravityChange;
 
 	int		gameState;
 
 	void	checkCollisions();
 	void	checkWallCollision();
 	void	getCollisionFlag(mapTile &tile);
-
 
 
 	public:
@@ -49,6 +49,7 @@ class GameHandler
 	void	checkRelease(sf::Event &event);
 
 	void	drawStartScreen(sf::RenderWindow &window, float dt);
+	void	drawEndScreen(sf::RenderWindow &window);
 	void	updateGame(float dt);
 	void	drawGame(sf::RenderWindow &window);
 
@@ -58,6 +59,7 @@ class GameHandler
 	Player		&getPlayer();
 	Map			&getMap();
 	Collectible &getCollectible();
+	InfoScreen	&getInfoScreen();
 	int			getGameState();
 
 };

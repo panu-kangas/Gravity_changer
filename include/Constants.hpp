@@ -8,6 +8,8 @@
 # define PLAYER_SIZE 16
 # define COLLECT_SIZE 12
 
+# define VALID_MAP_CHAR	"10"
+
 # include <SFML/Graphics.hpp> // this might not be a good place for this...?
 
 
@@ -40,7 +42,8 @@ enum tiletype
 enum gamestates
 {
 	STARTSCREEN,
-	GAME
+	GAME,
+	END
 };
 
 struct mapTile

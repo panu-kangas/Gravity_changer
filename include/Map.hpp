@@ -13,6 +13,9 @@ class Map
 
 	std::vector<std::vector<mapTile>>	tileVec;
 
+	void	setTileVec(std::string mapStr, int rowLen);
+	void	readMap();
+
 
 	public:
 
@@ -20,7 +23,6 @@ class Map
 	~Map() {};
 
 	void	initMap();
-	void	readMap();
 
 	void	drawMap(sf::RenderWindow &window);
 
