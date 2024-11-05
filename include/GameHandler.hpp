@@ -33,6 +33,8 @@ class GameHandler
 	bool	firstGravityChange;
 
 	int		gameState;
+	bool	hasMoved;
+
 
 	void	checkCollisions();
 	void	checkWallCollision();

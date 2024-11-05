@@ -13,16 +13,16 @@ FetchContent_Declare(SFML
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(platform src/main.cpp src/GameHandler.cpp src/Player.cpp 
+add_executable(gravity src/main.cpp src/GameHandler.cpp src/Player.cpp 
 src/Map.cpp src/Collectible.cpp src/InfoScreen.cpp src/StartScreen.cpp src/EndScreen.cpp)
-target_link_libraries(platform PRIVATE sfml-graphics)
-target_compile_features(platform PRIVATE cxx_std_17)
-target_include_directories(platform PRIVATE include)
+target_link_libraries(gravity PRIVATE sfml-graphics)
+target_compile_features(gravity PRIVATE cxx_std_17)
+target_include_directories(gravity PRIVATE include)
 
 if(WIN32)
     add_custom_command(
-        TARGET platform
+        TARGET gravity
         COMMENT "Copy OpenAL DLL"
-        PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SFML_SOURCE_DIR}/extlibs/bin/$<IF:$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>,x64,x86>/openal32.dll $<TARGET_FILE_DIR:platform>
+        PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${SFML_SOURCE_DIR}/extlibs/bin/$<IF:$<EQUAL:${CMAKE_SIZEOF_VOID_P},8>,x64,x86>/openal32.dll $<TARGET_FILE_DIR:gravity>
         VERBATIM)
 endif()

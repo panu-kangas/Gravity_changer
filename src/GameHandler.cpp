@@ -10,6 +10,7 @@ GameHandler::GameHandler()
 	gravity = 0.05;
 	gravityDir = DOWN;
 	firstGravityChange = false;
+	hasMoved = false;
 
 	for (int i = 0; i < 8; ++i)
 		pressedKeyArr[i] = false;
@@ -20,7 +21,6 @@ GameHandler::GameHandler()
 	gameState = STARTSCREEN;
 
 }
-
 
 
 /*
@@ -208,8 +208,6 @@ void	GameHandler::updateGame(float dt)
 	}
 
 	// MOVE THIS TO OWN FUNCTION
-
-	static bool	hasMoved;
 
 	if (gravityDir == DOWN || gravityDir == UP)
 	{
