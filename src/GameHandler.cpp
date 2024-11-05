@@ -9,6 +9,7 @@ GameHandler::GameHandler()
 {
 	gravity = 0.05;
 	gravityDir = DOWN;
+	firstGravityChange = false;
 
 	for (int i = 0; i < 8; ++i)
 		pressedKeyArr[i] = false;
@@ -23,13 +24,17 @@ GameHandler::GameHandler()
 
 
 /*
-	INITIALIZATION, is this needed...?
+	INITIALIZATION
 */
 
 void	GameHandler::initGame()
 {
-
-
+	collectible.createNewCollectible(map, player);
+	player.resetPlayer();
+	info.resetInfo();
+	end.getScoreString() = "";
+	gravityDir = DOWN;
+	firstGravityChange = false;
 }
 
 
@@ -40,37 +45,42 @@ void	GameHandler::initGame()
 
 void	GameHandler::checkInput(sf::Event &event)
 {
+	// MOVEMENT
 	switch (event.key.scancode)
 	{
 		case sf::Keyboard::Scan::W :
-			if (!player.getJumpState())
+			if (gravityDir == DOWN && !player.getJumpState())
 			{
 				player.setJumpState(true);
-
-				if (gravityDir == UP || gravityDir == DOWN)
-					player.getDirVec().y = player.getJumpPower();
-				else if (gravityDir == LEFT || gravityDir == RIGHT)
-					player.getDirVec().x = player.getJumpPower();
-
-				if (gravityDir == UP && player.getDirVec().y < 0)
-					player.getDirVec().y *= -1;
-				else if (gravityDir == LEFT && player.getDirVec().x < 0)
-					player.getDirVec().x *= -1;
-
+				player.getDirVec().y = player.getJumpPower();
 			}
-			setKeypressState(true, W); // is this needed?
+			setKeypressState(true, W);
 			break ;
 
-//		case sf::Keyboard::Scan::S :
-//			tempVec.y = 1;
-//			setKeypressState(true, DOWN);
-//			break ;
+		case sf::Keyboard::Scan::S :
+			if (gravityDir == UP && !player.getJumpState())
+			{
+				player.setJumpState(true);
+				player.getDirVec().y = player.getJumpPower() * -1;
+			}
+			setKeypressState(true, S);
+			break ;
 
 		case sf::Keyboard::Scan::A :
+			if (gravityDir == RIGHT && !player.getJumpState())
+			{
+				player.setJumpState(true);
+				player.getDirVec().x = player.getJumpPower();
+			}
 			setKeypressState(true, A);
 			break ;
 
 		case sf::Keyboard::Scan::D :
+			if (gravityDir == LEFT && !player.getJumpState())
+			{
+				player.setJumpState(true);
+				player.getDirVec().x = player.getJumpPower() * -1;
+			}
 			setKeypressState(true, D);
 			break ;
 
@@ -78,12 +88,11 @@ void	GameHandler::checkInput(sf::Event &event)
 			break ;
 	}
 
-	sf::Time gravityTime = gravityClock.getElapsedTime();
+	// GRAVITY
 
-	if (gravityTime.asSeconds() < 3.0)
+	if (firstGravityChange && gravityClock.getElapsedTime().asSeconds() < 2.5)
 		return ;
 	
-
 	switch (event.key.code)
 	{
 		case sf::Keyboard::Up :
@@ -130,6 +139,9 @@ void	GameHandler::checkInput(sf::Event &event)
 			break ;
 	}
 
+	if (!firstGravityChange && \
+	(pressedKeyArr[UPARR] || pressedKeyArr[DOWNARR] || pressedKeyArr[LEFTARR] || pressedKeyArr[RIGHTARR]))
+		firstGravityChange = true;
 
 }
 
@@ -141,9 +153,9 @@ void	GameHandler::checkRelease(sf::Event &event)
 			setKeypressState(false, W);
 			break ;
 
-//		case sf::Keyboard::Scan::S :
-//			setKeypressState(false, DOWN);
-//			break ;
+		case sf::Keyboard::Scan::S :
+			setKeypressState(false, S);
+			break ;
 
 		case sf::Keyboard::Scan::A :
 			setKeypressState(false, A);
@@ -189,40 +201,38 @@ void	GameHandler::checkRelease(sf::Event &event)
 void	GameHandler::updateGame(float dt)
 {
 
+	if (info.getCurGameTime() <= 0)
+	{
+		gameState = END;
+		return ;
+	}
+
 	// MOVE THIS TO OWN FUNCTION
 
 	static bool	hasMoved;
 
-	if (pressedKeyArr[A])
+	if (gravityDir == DOWN || gravityDir == UP)
 	{
-		if (gravityDir == UP || gravityDir == DOWN)
+		if (pressedKeyArr[A])
 			player.getDirVec().x = -1;
-		else if (gravityDir == RIGHT)
-			player.getDirVec().y = 1;
-		else if (gravityDir == LEFT)
-			player.getDirVec().y = -1;
-	}
-	else if (pressedKeyArr[D])
-	{
-		if (gravityDir == UP || gravityDir == DOWN)
+		else if (pressedKeyArr[D])
 			player.getDirVec().x = 1;
-		else if (gravityDir == RIGHT)
-			player.getDirVec().y = -1;
-		else if (gravityDir == LEFT)
-			player.getDirVec().y = 1;
-	}
-	
-	if (!pressedKeyArr[A] && !pressedKeyArr[D])
-	{
-		if (gravityDir == UP || gravityDir == DOWN)
+		else if (!pressedKeyArr[A] && !pressedKeyArr[D])
 			player.getDirVec().x = 0;
-		else if (gravityDir == LEFT || gravityDir == RIGHT)
+	}
+	else
+	{
+		if (pressedKeyArr[W])
+			player.getDirVec().y = -1;
+		else if (pressedKeyArr[S])
+			player.getDirVec().y = 1;
+		else if (!pressedKeyArr[W] && !pressedKeyArr[S])
 			player.getDirVec().y = 0;
 	}
 
 	// trying to fix "falls in the start" -bug
-	// !!! ADD ARROW KEYS ALSO HERE !!!
-	if (hasMoved == false && (pressedKeyArr[W] || pressedKeyArr[A] || pressedKeyArr[D]))
+	if (hasMoved == false && (pressedKeyArr[W] || pressedKeyArr[A] || pressedKeyArr[D] || pressedKeyArr[S] \
+	|| pressedKeyArr[UPARR] || pressedKeyArr[LEFTARR] || pressedKeyArr[RIGHTARR] || pressedKeyArr[DOWNARR]))
 		hasMoved = true;
 
 	//
@@ -232,7 +242,11 @@ void	GameHandler::updateGame(float dt)
 		player.movePlayer(dt, gravity, gravityDir);
 		checkCollisions();
 	}
-	
+
+	if (!firstGravityChange)
+		info.update(2.5);
+	else
+		info.update(gravityClock.getElapsedTime().asSeconds());
 
 
 }
@@ -251,7 +265,7 @@ void	GameHandler::checkCollisions()
 	
 	if (player.getSprite().getGlobalBounds().intersects(collectible.getSprite().getGlobalBounds()))
 	{
-		collectible.createNewCollectible(map);
+		collectible.createNewCollectible(map, player);
 		info.addScore(100);
 	}
 
@@ -331,12 +345,12 @@ void	GameHandler::getCollisionFlag(mapTile &tile)
 			{
 				if (collisionTile.y < playerTile.y)
 				{
-					if (map.getTileType(playerCheckPoints[i].x / TILE_SIZE, (playerCheckPoints[i].y + 10) / TILE_SIZE) == EMPTY)
+					if (map.getTileType(playerCheckPoints[i].x / TILE_SIZE, (playerCheckPoints[i].y + 30) / TILE_SIZE) == EMPTY)
 						collFlags[UP] = true;
 				}
 				else if (collisionTile.y > playerTile.y)
 				{
-					if (map.getTileType(playerCheckPoints[i].x / TILE_SIZE, (playerCheckPoints[i].y - 10) / TILE_SIZE) == EMPTY)
+					if (map.getTileType(playerCheckPoints[i].x / TILE_SIZE, (playerCheckPoints[i].y - 30) / TILE_SIZE) == EMPTY)
 						collFlags[DOWN] = true;
 				}
 				else if (collisionTile.x < playerTile.x)
@@ -348,12 +362,12 @@ void	GameHandler::getCollisionFlag(mapTile &tile)
 			{
 				if (collisionTile.x < playerTile.x)
 				{
-					if (map.getTileType((playerCheckPoints[i].x + 10) / TILE_SIZE, playerCheckPoints[i].y / TILE_SIZE) == EMPTY)
+					if (map.getTileType((playerCheckPoints[i].x + 30) / TILE_SIZE, playerCheckPoints[i].y / TILE_SIZE) == EMPTY)
 						collFlags[LEFT] = true;
 				}
 				else if(collisionTile.x > playerTile.x)
 				{
-					if (map.getTileType((playerCheckPoints[i].x - 10) / TILE_SIZE, playerCheckPoints[i].y / TILE_SIZE) == EMPTY)
+					if (map.getTileType((playerCheckPoints[i].x - 30) / TILE_SIZE, playerCheckPoints[i].y / TILE_SIZE) == EMPTY)
 						collFlags[RIGHT] = true;
 				}
 				else if (collisionTile.y < playerTile.y)
@@ -377,10 +391,21 @@ void	GameHandler::drawStartScreen(sf::RenderWindow &window, float dt)
 	startscreen.drawScreen(window, dt);
 }
 
+void	GameHandler::drawEndScreen(sf::RenderWindow &window)
+{
+	if (end.getScoreString().empty())
+		end.setScoreString(info.getScore());
+
+	end.draw(window);
+}
+
+
 
 
 void	GameHandler::drawGame(sf::RenderWindow &window)
 {
+	if (gameState == END)
+		return ;
 
 	map.drawMap(window);
 
@@ -431,56 +456,15 @@ Collectible &GameHandler::getCollectible()
 	return (collectible);
 }
 
+InfoScreen	&GameHandler::getInfoScreen()
+{
+	return (info);
+}
+
+
 int		GameHandler::getGameState()
 {
 	return (gameState);
 }
 
 
-
-
-
-/*
-	OLD VERSION:
-
-
-bool	GameHandler::checkWallCollision(Player &player, Map &map, float dt)
-{
-	sf::Vector2f	checkPoints[4];
-
-	for (int i = 0; i < 4; ++i)
-	{
-		checkPoints[i].x = player.getCoord().x + (player.getDirVec().x * player.getMoveSpeed() * dt);
-
-		if (player.getJumpState())
-			checkPoints[i].y = player.getCoord().y + (player.getDirVec().y * player.getMoveSpeed() * dt);
-		else
-			checkPoints[i].y = player.getCoord().y;
-	}
-
-	checkPoints[1].x += PLAYER_SIZE;
-	checkPoints[2].x += PLAYER_SIZE;
-	checkPoints[2].y += PLAYER_SIZE;
-	checkPoints[3].y += PLAYER_SIZE;
-
-	sf::Vector2f	collisionTile = {-100, -100};
-	sf::Vector2f	checkTile;
-
-	for (int i = 0; i < 4; ++i)
-	{
-		checkTile = {checkPoints[i].x / TILE_SIZE, checkPoints[i].y / TILE_SIZE};
-
-		if (map.getTileType(checkTile.x, checkTile.y) == WALL)
-			collisionTile = checkTile;
-	}
-
-	return (false);
-
-}
-
-
-
-
-
-
-*/

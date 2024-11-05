@@ -10,6 +10,8 @@ Collectible::Collectible()
 	coord.x = 0; // should these be -10 or something...?
 	coord.y = 0;
 
+	coordinateSet = false;
+
 	sprite.setSize({COLLECT_SIZE, COLLECT_SIZE});
 	sprite.setFillColor(sf::Color::Red);
 	sprite.setPosition(coord);
@@ -20,13 +22,16 @@ Collectible::Collectible()
 	CREATE COLLECTIBLE
 */
 
-void	Collectible::createNewCollectible(Map &map)
+void	Collectible::createNewCollectible(Map &map, Player &player)
 {
 	std::vector<std::vector<mapTile>>	&tileVec = map.getTileVec();
 	int		x, y, side;
 
 	srand(time(NULL));
+	sprite.setPosition({-10, -10});
 
+	// Should here be a safety system for faulty maps...? 
+	// For example a counter, that breaks the loop if it goes over 100?
 	while (1)
 	{
 		x = rand() % (GAME_WIDTH / TILE_SIZE);
@@ -45,60 +50,54 @@ void	Collectible::createNewCollectible(Map &map)
 		}
 	}
 
-	bool	coordinateSet = false;
-
+	// Should here be a safety system for faulty maps etc...? 
+	// For example a counter, that breaks the loop if it goes over 100 and throws error?
 	while (1)
 	{
 		side = rand() % 4;
-
 		switch (side)
 		{
 			case UP :
 				if (y > 0 && tileVec[y - 1][x].type == EMPTY)
-				{
-					setNewCoord(x, y, UP);
-					coordinateSet = true;
-				}
+					setNewCoord(x, y, UP, player);
 				break ;
 			
 			case DOWN :
 				if (y < (GAME_HEIGHT / TILE_SIZE - 1) && tileVec[y + 1][x].type == EMPTY)
-				{
-					setNewCoord(x, y, DOWN);
-					coordinateSet = true;
-
-				}
+					setNewCoord(x, y, DOWN, player);
 				break ;
 
 			case LEFT :
 				if (x > 0 && tileVec[y][x - 1].type == EMPTY)
-				{
-					setNewCoord(x, y, LEFT);
-					coordinateSet = true;
-				}
+					setNewCoord(x, y, LEFT, player);
 				break ;
 
 			case RIGHT :
 				if (x < (GAME_WIDTH / TILE_SIZE - 1) && tileVec[y][x + 1].type == EMPTY)
-				{
-					setNewCoord(x, y, RIGHT);
-					coordinateSet = true;
-				}
+					setNewCoord(x, y, RIGHT, player);
 				break ;
 
 			default :
 				continue;
 		}
 
+
 		if (coordinateSet == true)
+		{
+			coordinateSet = false;
 			break ;
+		}
 	}
 
 }
 
 
-void	Collectible::setNewCoord(int x, int y, int direction)
+void	Collectible::setNewCoord(int x, int y, int direction, Player &player)
 {
+
+	if (sprite.getGlobalBounds().intersects(player.getSprite().getGlobalBounds()))
+		return ;
+
 	if (direction == UP)
 	{
 		coord.x = (x * TILE_SIZE) + (TILE_SIZE / 2);
@@ -121,7 +120,7 @@ void	Collectible::setNewCoord(int x, int y, int direction)
 	}
 
 	sprite.setPosition(coord);
-
+	coordinateSet = true;
 }
 
 

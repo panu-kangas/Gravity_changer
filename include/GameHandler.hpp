@@ -9,6 +9,7 @@
 # include "Map.hpp"
 # include "InfoScreen.hpp"
 # include "StartScreen.hpp"
+# include "EndScreen.hpp"
 
 
 class GameHandler
@@ -20,6 +21,7 @@ class GameHandler
 	Collectible	collectible;
 	InfoScreen	info;
 	StartScreen	startscreen;
+	EndScreen	end;
 
 	sf::Clock	gravityClock;
 
@@ -28,6 +30,7 @@ class GameHandler
 
 	bool	pressedKeyArr[8];
 	bool	collFlags[4];
+	bool	firstGravityChange;
 
 	int		gameState;
 
@@ -35,13 +38,12 @@ class GameHandler
 	void	checkWallCollision();
 	void	getCollisionFlag(mapTile &tile);
 
-
+/////
 
 	public:
 
 	GameHandler();
 	~GameHandler() {};
-
 
 	void	initGame();
 
@@ -49,6 +51,7 @@ class GameHandler
 	void	checkRelease(sf::Event &event);
 
 	void	drawStartScreen(sf::RenderWindow &window, float dt);
+	void	drawEndScreen(sf::RenderWindow &window);
 	void	updateGame(float dt);
 	void	drawGame(sf::RenderWindow &window);
 
@@ -58,6 +61,7 @@ class GameHandler
 	Player		&getPlayer();
 	Map			&getMap();
 	Collectible &getCollectible();
+	InfoScreen	&getInfoScreen();
 	int			getGameState();
 
 };

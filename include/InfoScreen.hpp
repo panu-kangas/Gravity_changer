@@ -13,11 +13,14 @@ class InfoScreen
 	sf::RectangleShape	background;
 
 	sf::Text			scoreText;
-
-	sf::Text			gameTimer;
-
+	sf::Text			gameTimerText;
+	sf::Text			gravityTimerText;
 	sf::Font			pixelFont;
 
+	sf::Clock			gameClock;
+	float				curGameTime;
+
+	sf::RectangleShape	gravityMeter;
 
 	int		scoreCount;
 
@@ -29,7 +32,12 @@ class InfoScreen
 	void	drawInfoScreen(sf::RenderWindow &window);
 
 	void	addScore(unsigned int addition);
-	void	updateTimer(); // NOT DONE
+	void	update(float gravityTime);
+
+	void	resetInfo();
+
+	float	getCurGameTime();
+	int		getScore();
 
 
 };

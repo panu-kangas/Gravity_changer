@@ -35,13 +35,13 @@ class Player
 	void	setJumpState(bool state);
 	void	fixPosAfterCollision(Map &map, bool *collFlags, int gravityDir);
 
+	void	resetPlayer();
+
 
 	// These should probably not all return reference, since then they can be changed without setter!
 	sf::RectangleShape	&getSprite();
 	sf::Vector2f		&getDirVec();
 	sf::Vector2f		&getCoord();
-//	sf::Vector2i		getCurTileCoord();
-//	sf::Vector2i		getPrevTileCoord();
 	float				&getMoveSpeed();
 	float				&getJumpPower();
 	bool				&getJumpState();

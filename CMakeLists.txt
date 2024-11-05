@@ -14,7 +14,7 @@ FetchContent_Declare(SFML
 FetchContent_MakeAvailable(SFML)
 
 add_executable(platform src/main.cpp src/GameHandler.cpp src/Player.cpp 
-src/Map.cpp src/Collectible.cpp src/InfoScreen.cpp src/StartScreen.cpp)
+src/Map.cpp src/Collectible.cpp src/InfoScreen.cpp src/StartScreen.cpp src/EndScreen.cpp)
 target_link_libraries(platform PRIVATE sfml-graphics)
 target_compile_features(platform PRIVATE cxx_std_17)
 target_include_directories(platform PRIVATE include)
