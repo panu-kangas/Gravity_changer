@@ -6,6 +6,7 @@
 
 # include "Constants.hpp"
 # include "Map.hpp"
+# include "Player.hpp"
 
 class Collectible
 {
@@ -14,7 +15,10 @@ class Collectible
 	sf::Vector2f		coord;
 	sf::RectangleShape	sprite;
 
-	void	setNewCoord(int x, int y, int direction);
+	bool	coordinateSet;
+
+
+	void	setNewCoord(int x, int y, int direction, Player &player);
 
 
 	public:
@@ -22,7 +26,7 @@ class Collectible
 	Collectible();
 	~Collectible() {};
 
-	void	createNewCollectible(Map &map);
+	void	createNewCollectible(Map &map, Player &player);
 
 	void	drawCollectible(sf::RenderWindow &window);
 

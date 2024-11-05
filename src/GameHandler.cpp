@@ -29,8 +29,7 @@ GameHandler::GameHandler()
 
 void	GameHandler::initGame()
 {
-	// FIX: Collectible should NOT land on player
-	collectible.createNewCollectible(map);
+	collectible.createNewCollectible(map, player);
 	player.resetPlayer();
 	info.resetInfo();
 	end.getScoreString() = "";
@@ -266,7 +265,7 @@ void	GameHandler::checkCollisions()
 	
 	if (player.getSprite().getGlobalBounds().intersects(collectible.getSprite().getGlobalBounds()))
 	{
-		collectible.createNewCollectible(map);
+		collectible.createNewCollectible(map, player);
 		info.addScore(100);
 	}
 

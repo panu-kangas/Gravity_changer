@@ -40,7 +40,7 @@ InfoScreen::InfoScreen()
 	gameTimerText.setCharacterSize(20);
 	gameTimerText.setPosition(coord.x + 150, coord.y + 2);
 	gameTimerText.setString("TIME LEFT:\n30:00");
-	curGameTime = 20.0;
+	curGameTime = 2.0;
 
 	// Gravity timer
 	gravityTimerText.setFont(pixelFont);
@@ -126,7 +126,7 @@ void	InfoScreen::update(float gravityTime)
 void	InfoScreen::resetInfo()
 {
 	scoreCount = 0;
-	curGameTime = 20.0;
+	curGameTime = 2.0;
 	scoreText.setString("SCORE:\n0");
 	gameClock.restart();
 }

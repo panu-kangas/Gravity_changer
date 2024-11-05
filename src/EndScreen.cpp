@@ -55,14 +55,14 @@ void	EndScreen::draw(sf::RenderWindow &window)
 
 	if (endText.getPosition().x == 0)
 	{
-		endText.setPosition((window.getSize().x / 2) - (endText.getGlobalBounds().width / 2), 
-		(window.getSize().y / 2) - (endText.getGlobalBounds().height / 2) - 100);
+		endText.setPosition((GAME_WIDTH / 2) - (endText.getGlobalBounds().width / 2), 
+		(GAME_HEIGHT / 2) - (endText.getGlobalBounds().height / 2) - 200);
 
-		yourScoreText.setPosition((window.getSize().x / 2) - (yourScoreText.getGlobalBounds().width / 2), 
-		(window.getSize().y / 2) - (yourScoreText.getGlobalBounds().height / 2) + 100);
+		yourScoreText.setPosition((GAME_WIDTH/ 2) - (yourScoreText.getGlobalBounds().width / 2), 
+		(GAME_HEIGHT / 2) - (yourScoreText.getGlobalBounds().height / 2) + 50);
 
-		pressEnter.setPosition(window.getSize().x / 2 - pressEnter.getGlobalBounds().width / 2,
-		window.getSize().y / 2 - pressEnter.getGlobalBounds().height / 2 + 300);
+		pressEnter.setPosition(GAME_WIDTH / 2 - pressEnter.getGlobalBounds().width / 2,
+		GAME_HEIGHT / 2 - pressEnter.getGlobalBounds().height / 2 + 200);
 	}
 
 	window.draw(endText);

@@ -25,7 +25,7 @@ int main()
 	intGameWindowSize.x = gameWindowSize.x;
 	intGameWindowSize.y = gameWindowSize.y;
 
-	window.setPosition({monitorSize.x / 2 - GAME_WIDTH / 2, monitorSize.y / 2 - GAME_HEIGHT / 2});
+	window.setPosition({monitorSize.x / 2 - intGameWindowSize.x / 2, monitorSize.y / 2 - intGameWindowSize.y / 2});
 
 	// Set game
 	GameHandler game;

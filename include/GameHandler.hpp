@@ -38,12 +38,12 @@ class GameHandler
 	void	checkWallCollision();
 	void	getCollisionFlag(mapTile &tile);
 
+/////
 
 	public:
 
 	GameHandler();
 	~GameHandler() {};
-
 
 	void	initGame();
 
