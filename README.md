@@ -59,7 +59,8 @@ How many points can you get before the time runs out...? 😉
 
 WASD - Move the player  
 *(NOTE: if gravity pulls down, you can jump by pressing W, but if gravity pulls to the right, you jump by using A etc)*  
-ARROW KEYS - Change gravitation's direction 
+ 
+ARROW KEYS - Change gravitation's direction  
 ESC - Exit the game
 
 # Future develompent ideas
