@@ -28,7 +28,7 @@ void	Collectible::createNewCollectible(Map &map, Player &player)
 	int		x, y, side;
 
 	srand(time(NULL));
-	sprite.setPosition({-10, -10});
+	sprite.setPosition({0, 0});
 
 	// Should here be a safety system for faulty maps...? 
 	// For example a counter, that breaks the loop if it goes over 100?
@@ -37,7 +37,7 @@ void	Collectible::createNewCollectible(Map &map, Player &player)
 		x = rand() % (GAME_WIDTH / TILE_SIZE);
 		y = rand() % (GAME_HEIGHT / TILE_SIZE);
 
-		if (tileVec[y][x].type == WALL)
+		if (tileVec[y][x].type == WALL && !checkAdjacentPlayer(player, x, y))
 		{
 			if (x > 0 && tileVec[y][x - 1].type == EMPTY)
 				break ;
@@ -91,13 +91,24 @@ void	Collectible::createNewCollectible(Map &map, Player &player)
 
 }
 
+bool	Collectible::checkAdjacentPlayer(Player &player, int x, int y)
+{
+	sf::Vector2i playerTileCoord;
+
+	playerTileCoord.x = player.getCoord().x / TILE_SIZE;
+	playerTileCoord.y = player.getCoord().y / TILE_SIZE;
+
+	if (playerTileCoord.x == x - 1 || playerTileCoord.x == x + 1
+	|| playerTileCoord.y == y - 1 || playerTileCoord.y == y + 1)
+		return (true);
+	else
+		return (false);
+}
+
+
 
 void	Collectible::setNewCoord(int x, int y, int direction, Player &player)
 {
-
-	if (sprite.getGlobalBounds().intersects(player.getSprite().getGlobalBounds()))
-		return ;
-
 	if (direction == UP)
 	{
 		coord.x = (x * TILE_SIZE) + (TILE_SIZE / 2);

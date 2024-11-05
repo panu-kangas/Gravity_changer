@@ -85,6 +85,8 @@ void	InfoScreen::addScore(unsigned int addition)
 	scoreText.setString(scoreString);
 
 	curGameTime += 2;
+	if (curGameTime > 30)
+		curGameTime = 30;
 }
 
 /*

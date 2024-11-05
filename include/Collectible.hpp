@@ -19,6 +19,7 @@ class Collectible
 
 
 	void	setNewCoord(int x, int y, int direction, Player &player);
+	bool	checkAdjacentPlayer(Player &player, int x, int y);
 
 
 	public:
