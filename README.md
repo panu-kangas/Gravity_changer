@@ -39,7 +39,7 @@ Run the following commands in your terminal:
 
 1. ```git clone https://github.com/panu-kangas/Gravity_changer.git && cd Gravity_changer```  
 2. ```cmake -B build```  
-3. ```cmake --build build```
+3. ```cmake --build build```  
 *(4. on Windows: move the executable file to the root of the repository)*
 5. ```./gravity```
 
