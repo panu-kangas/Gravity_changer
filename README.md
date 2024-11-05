@@ -1,4 +1,4 @@
-# GRAVITY CHANGER - a platformer with gravitational powers
+# GRAVITY CHANGER
 
 Gravity changer is sort-of-a platformer, that has a gravitation changing mechanism to make the gameplay more interesting.
 
