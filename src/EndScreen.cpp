@@ -6,30 +6,30 @@
 
 EndScreen::EndScreen()
 {
-	if (!pixelFont.loadFromFile("assets/pixelfont.ttf"))
+	if (!m_pixelFont.loadFromFile("assets/pixelfont.ttf"))
 	{
 		std::cout << "\nError occurred while loading font.\nExiting program.\n" << std::endl;
 		exit(1);
 	}
 
-	yourScoreString = "";
+	m_yourScoreString = "";
 
-	endText.setFont(pixelFont);
-	endText.setCharacterSize(70);
-	endText.setFillColor({235, 168, 14});
-	endText.setString("GAME OVER");
-	endText.setPosition(0, 0);
+	m_endText.setFont(m_pixelFont);
+	m_endText.setCharacterSize(70);
+	m_endText.setFillColor({235, 168, 14});
+	m_endText.setString("GAME OVER");
+	m_endText.setPosition(0, 0);
 
-	yourScoreText.setFont(pixelFont);
-	yourScoreText.setCharacterSize(40);
-	yourScoreText.setFillColor({235, 168, 14});
-	yourScoreText.setPosition(0, 0);
+	m_yourScoreText.setFont(m_pixelFont);
+	m_yourScoreText.setCharacterSize(40);
+	m_yourScoreText.setFillColor({235, 168, 14});
+	m_yourScoreText.setPosition(0, 0);
 
-	pressEnter.setFont(pixelFont);
-	pressEnter.setCharacterSize(20);
-	pressEnter.setFillColor({235, 168, 14});
-	pressEnter.setString("Press Enter to play again");
-	pressEnter.setPosition(0, 0);
+	m_pressEnter.setFont(m_pixelFont);
+	m_pressEnter.setCharacterSize(20);
+	m_pressEnter.setFillColor({235, 168, 14});
+	m_pressEnter.setString("Press Enter to play again");
+	m_pressEnter.setPosition(0, 0);
 }
 
 /*
@@ -38,12 +38,11 @@ EndScreen::EndScreen()
 
 void	EndScreen::setScoreString(int score)
 {
-	yourScoreString = "Your score:\n" + std::to_string(score);
-	yourScoreText.setString(yourScoreString);
+	m_yourScoreString = "Your score:\n" + std::to_string(score);
+	m_yourScoreText.setString(m_yourScoreString);
 
 
 }
-
 
 /*
 	DRAW
@@ -52,24 +51,22 @@ void	EndScreen::setScoreString(int score)
 
 void	EndScreen::draw(sf::RenderWindow &window)
 {
-
-	if (endText.getPosition().x == 0)
+	if (m_endText.getPosition().x == 0)
 	{
-		endText.setPosition((GAME_WIDTH / 2) - (endText.getGlobalBounds().width / 2), 
-		(GAME_HEIGHT / 2) - (endText.getGlobalBounds().height / 2) - 200);
+		m_endText.setPosition((GAME_WIDTH / 2) - (m_endText.getGlobalBounds().width / 2), 
+		(GAME_HEIGHT / 2) - (m_endText.getGlobalBounds().height / 2) - 200);
 
-		yourScoreText.setPosition((GAME_WIDTH/ 2) - (yourScoreText.getGlobalBounds().width / 2), 
-		(GAME_HEIGHT / 2) - (yourScoreText.getGlobalBounds().height / 2) + 50);
+		m_yourScoreText.setPosition((GAME_WIDTH/ 2) - (m_yourScoreText.getGlobalBounds().width / 2), 
+		(GAME_HEIGHT / 2) - (m_yourScoreText.getGlobalBounds().height / 2) + 50);
 
-		pressEnter.setPosition(GAME_WIDTH / 2 - pressEnter.getGlobalBounds().width / 2,
-		GAME_HEIGHT / 2 - pressEnter.getGlobalBounds().height / 2 + 200);
+		m_pressEnter.setPosition(GAME_WIDTH / 2 - m_pressEnter.getGlobalBounds().width / 2,
+		GAME_HEIGHT / 2 - m_pressEnter.getGlobalBounds().height / 2 + 200);
 	}
 
-	window.draw(endText);
-	window.draw(yourScoreText);
-	window.draw(pressEnter);
+	window.draw(m_endText);
+	window.draw(m_yourScoreText);
+	window.draw(m_pressEnter);
 }
-
 
 /*
 	GETTERS
@@ -77,7 +74,7 @@ void	EndScreen::draw(sf::RenderWindow &window)
 
 std::string	&EndScreen::getScoreString()
 {
-	return (yourScoreString);
+	return (m_yourScoreString);
 }
 
 

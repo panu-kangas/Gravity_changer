@@ -8,12 +8,13 @@ class EndScreen
 {
 	private:
 
-	sf::Text	endText;
-	sf::Text	yourScoreText;
-	sf::Text	pressEnter;
-	sf::Font	pixelFont;
-	
-	std::string	yourScoreString;
+	sf::Text	m_endText;
+	sf::Text	m_yourScoreText;
+	sf::Text	m_pressEnter;
+	sf::Font	m_pixelFont;
+	std::string	m_yourScoreString;
+
+//////
 
 	public:
 

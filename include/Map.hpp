@@ -3,19 +3,18 @@
 
 # include <iostream>
 # include <vector>
-
 # include "Constants.hpp"
-
 
 class Map
 {
 	private:
 
-	std::vector<std::vector<mapTile>>	tileVec;
+	std::vector<std::vector<mapTile>>	m_tileVec;
 
 	void	setTileVec(std::string mapStr, int rowLen);
 	void	readMap();
 
+//////
 
 	public:
 
@@ -23,16 +22,10 @@ class Map
 	~Map() {};
 
 	void	initMap();
-
 	void	drawMap(sf::RenderWindow &window);
 
 	std::vector<std::vector<mapTile>>	&getTileVec();
 	int			&getTileType(int x, int y);
-
 };
-
-
-
-
 
 #endif

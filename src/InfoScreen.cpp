@@ -4,73 +4,66 @@
 #include <sstream>
 #include <math.h>
 
-
 /*
 	CONSTRUCTOR
 */
 
 InfoScreen::InfoScreen()
 {
-	// Common info
-	size.x = 500;
-	size.y = 70;
-	coord.x = (GAME_WIDTH / 2) - (size.x / 2);
-	coord.y = GAME_HEIGHT - size.y - 10;
-	background.setSize(size);
-	background.setPosition(coord);
-	background.setFillColor(sf::Color::Black); // something else maybe? Black is boring...
+	m_size.x = 500;
+	m_size.y = 70;
+	m_coord.x = (GAME_WIDTH / 2) - (m_size.x / 2);
+	m_coord.y = GAME_HEIGHT - m_size.y - 10;
+	m_background.setSize(m_size);
+	m_background.setPosition(m_coord);
+	m_background.setFillColor(sf::Color::Black);
 
-	if (!pixelFont.loadFromFile("assets/pixelfont.ttf"))
+	if (!m_pixelFont.loadFromFile("assets/pixelfont.ttf"))
 	{
 		std::cout << "\nError occurred while loading font.\nExiting program.\n" << std::endl;
 		exit(1);
 	}
 
 	// Score
-	scoreText.setFont(pixelFont);
-	scoreText.setFillColor({235, 168, 14});
-	scoreText.setCharacterSize(20);
-	scoreText.setPosition(coord.x + 2, coord.y + 2);
-	scoreText.setString("SCORE:\n0");
-	scoreCount = 0;
+	m_scoreText.setFont(m_pixelFont);
+	m_scoreText.setFillColor({235, 168, 14});
+	m_scoreText.setCharacterSize(20);
+	m_scoreText.setPosition(m_coord.x + 2, m_coord.y + 2);
+	m_scoreText.setString("SCORE:\n0");
+	m_scoreCount = 0;
 
 	// Game timer
-	gameTimerText.setFont(pixelFont);
-	gameTimerText.setFillColor({235, 168, 14});
-	gameTimerText.setCharacterSize(20);
-	gameTimerText.setPosition(coord.x + 150, coord.y + 2);
-	gameTimerText.setString("TIME LEFT:\n30:00");
-	curGameTime = 20.0;
+	m_gameTimerText.setFont(m_pixelFont);
+	m_gameTimerText.setFillColor({235, 168, 14});
+	m_gameTimerText.setCharacterSize(20);
+	m_gameTimerText.setPosition(m_coord.x + 150, m_coord.y + 2);
+	m_gameTimerText.setString("TIME LEFT:\n30:00");
+	m_curGameTime = 20.0;
 
 	// Gravity timer
-	gravityTimerText.setFont(pixelFont);
-	gravityTimerText.setFillColor({235, 168, 14});
-	gravityTimerText.setCharacterSize(20);
-	gravityTimerText.setPosition(coord.x + 300, coord.y + 2);
-	gravityTimerText.setString("GRAVITY CHANGE:\n");
+	m_gravityTimerText.setFont(m_pixelFont);
+	m_gravityTimerText.setFillColor({235, 168, 14});
+	m_gravityTimerText.setCharacterSize(20);
+	m_gravityTimerText.setPosition(m_coord.x + 300, m_coord.y + 2);
+	m_gravityTimerText.setString("GRAVITY CHANGE:\n");
 
-	gravityMeter.setFillColor(sf::Color::Green);
-	gravityMeter.setPosition(coord.x + 300, coord.y + 32);
-	gravityMeter.setSize({185, 10});
-
+	m_gravityMeter.setFillColor(sf::Color::Green);
+	m_gravityMeter.setPosition(m_coord.x + 300, m_coord.y + 32);
+	m_gravityMeter.setSize({185, 10});
 }
-
 
 /*
 	DRAW
 */
 
-
 void	InfoScreen::drawInfoScreen(sf::RenderWindow &window)
 {
-	window.draw(background);
-	window.draw(scoreText);
-	window.draw(gameTimerText);
-	window.draw(gravityTimerText);
-	window.draw(gravityMeter);
+	window.draw(m_background);
+	window.draw(m_scoreText);
+	window.draw(m_gameTimerText);
+	window.draw(m_gravityTimerText);
+	window.draw(m_gravityMeter);
 }
-
-
 
 /*
 	SCORE FUNCTIONS
@@ -78,15 +71,15 @@ void	InfoScreen::drawInfoScreen(sf::RenderWindow &window)
 
 void	InfoScreen::addScore(unsigned int addition)
 {
-	scoreCount += addition;
+	m_scoreCount += addition;
 
 	std::string scoreString;
-	scoreString = "SCORE\n" + std::to_string(scoreCount);
-	scoreText.setString(scoreString);
+	scoreString = "SCORE\n" + std::to_string(m_scoreCount);
+	m_scoreText.setString(scoreString);
 
-	curGameTime += 2;
-	if (curGameTime > 30)
-		curGameTime = 30;
+	m_curGameTime += 2;
+	if (m_curGameTime > 30)
+		m_curGameTime = 30;
 }
 
 /*
@@ -96,51 +89,49 @@ void	InfoScreen::addScore(unsigned int addition)
 void	InfoScreen::update(float gravityTime)
 {
 	// TIMER
-	curGameTime -= gameClock.getElapsedTime().asSeconds();
-	gameClock.restart();
-	if (curGameTime < 0)
-		curGameTime = 0;
+	m_curGameTime -= m_gameClock.getElapsedTime().asSeconds();
+	m_gameClock.restart();
+	if (m_curGameTime < 0)
+		m_curGameTime = 0;
 
 	float	seconds;
-	seconds = (curGameTime - floor(curGameTime)) * 60;
+	seconds = (m_curGameTime - floor(m_curGameTime)) * 60;
 
 	std::stringstream	stream;
 	std::string			timerString;
 
-	stream << std::fixed << std::setprecision(0) << floor(curGameTime) << ":" << floor(seconds);
+	stream << std::fixed << std::setprecision(0) << floor(m_curGameTime) << ":" << floor(seconds);
 	timerString = "TIME LEFT:\n" + stream.str();
-	gameTimerText.setString(timerString);
+	m_gameTimerText.setString(timerString);
 
 	// GRAVITY METER
 	float	len;
-	len = (gravityTime / 2.5) * 185;
+	len = (gravityTime / GRAVITY_RECHARGE) * 185;
 	if (len >= 185)
 	{
 		len = 185;
-		gravityMeter.setFillColor(sf::Color::Green);
+		m_gravityMeter.setFillColor(sf::Color::Green);
 	}
 	else
-		gravityMeter.setFillColor(sf::Color::White);
-
-	gravityMeter.setSize({len, 10});
+		m_gravityMeter.setFillColor(sf::Color::White);
+	m_gravityMeter.setSize({len, 10});
 }
 
 void	InfoScreen::resetInfo()
 {
-	scoreCount = 0;
-	curGameTime = 20.0;
-	scoreText.setString("SCORE:\n0");
-	gameClock.restart();
+	m_scoreCount = 0;
+	m_curGameTime = 20.0;
+	m_scoreText.setString("SCORE:\n0");
+	m_gameClock.restart();
 }
 
 float	InfoScreen::getCurGameTime()
 {
-	return (curGameTime);
+	return (m_curGameTime);
 }
 
 int		InfoScreen::getScore()
 {
-	return (scoreCount);
+	return (m_scoreCount);
 }
-
 

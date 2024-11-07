@@ -1,20 +1,19 @@
 #include "Collectible.hpp"
 
-
 /*
 	CONSTRUCTOR
 */
 
 Collectible::Collectible()
 {
-	coord.x = 0; // should these be -10 or something...?
-	coord.y = 0;
+	m_coord.x = 0;
+	m_coord.y = 0;
 
-	coordinateSet = false;
+	m_coordinateSet = false;
 
-	sprite.setSize({COLLECT_SIZE, COLLECT_SIZE});
-	sprite.setFillColor(sf::Color::Red);
-	sprite.setPosition(coord);
+	m_sprite.setSize({COLLECT_SIZE, COLLECT_SIZE});
+	m_sprite.setFillColor(sf::Color::Red);
+	m_sprite.setPosition(m_coord);
 }
 
 
@@ -22,16 +21,17 @@ Collectible::Collectible()
 	CREATE COLLECTIBLE
 */
 
+// A safety system in the while(1) -loops in case of faulty maps...? For example a counter, that breaks the loop if it goes over 100?
+
 void	Collectible::createNewCollectible(Map &map, Player &player)
 {
 	std::vector<std::vector<mapTile>>	&tileVec = map.getTileVec();
 	int		x, y, side;
 
 	srand(time(NULL));
-	sprite.setPosition({0, 0});
+	m_sprite.setPosition({0, 0});
 
-	// Should here be a safety system for faulty maps...? 
-	// For example a counter, that breaks the loop if it goes over 100?
+	// Find random map-tile on map
 	while (1)
 	{
 		x = rand() % (GAME_WIDTH / TILE_SIZE);
@@ -50,8 +50,7 @@ void	Collectible::createNewCollectible(Map &map, Player &player)
 		}
 	}
 
-	// Should here be a safety system for faulty maps etc...? 
-	// For example a counter, that breaks the loop if it goes over 100 and throws error?
+	// Get random side of the map-tile
 	while (1)
 	{
 		side = rand() % 4;
@@ -81,10 +80,9 @@ void	Collectible::createNewCollectible(Map &map, Player &player)
 				continue;
 		}
 
-
-		if (coordinateSet == true)
+		if (m_coordinateSet == true)
 		{
-			coordinateSet = false;
+			m_coordinateSet = false;
 			break ;
 		}
 	}
@@ -105,35 +103,32 @@ bool	Collectible::checkAdjacentPlayer(Player &player, int x, int y)
 		return (false);
 }
 
-
-
 void	Collectible::setNewCoord(int x, int y, int direction, Player &player)
 {
 	if (direction == UP)
 	{
-		coord.x = (x * TILE_SIZE) + (TILE_SIZE / 2);
-		coord.y = (y * TILE_SIZE) - COLLECT_SIZE;
+		m_coord.x = (x * TILE_SIZE) + (TILE_SIZE / 2);
+		m_coord.y = (y * TILE_SIZE) - COLLECT_SIZE;
 	}
 	else if (direction == DOWN)
 	{
-		coord.x = (x * TILE_SIZE) + (TILE_SIZE / 2);
-		coord.y = (y * TILE_SIZE) + TILE_SIZE;
+		m_coord.x = (x * TILE_SIZE) + (TILE_SIZE / 2);
+		m_coord.y = (y * TILE_SIZE) + TILE_SIZE;
 	}
 	else if (direction == LEFT)
 	{
-		coord.x = (x * TILE_SIZE) - COLLECT_SIZE;
-		coord.y = (y * TILE_SIZE) + (TILE_SIZE / 2);
+		m_coord.x = (x * TILE_SIZE) - COLLECT_SIZE;
+		m_coord.y = (y * TILE_SIZE) + (TILE_SIZE / 2);
 	}
 	else if (direction == RIGHT)
 	{
-		coord.x = (x * TILE_SIZE) + TILE_SIZE;
-		coord.y = (y * TILE_SIZE) + (TILE_SIZE / 2);
+		m_coord.x = (x * TILE_SIZE) + TILE_SIZE;
+		m_coord.y = (y * TILE_SIZE) + (TILE_SIZE / 2);
 	}
 
-	sprite.setPosition(coord);
-	coordinateSet = true;
+	m_sprite.setPosition(m_coord);
+	m_coordinateSet = true;
 }
-
 
 
 /*
@@ -143,10 +138,8 @@ void	Collectible::setNewCoord(int x, int y, int direction, Player &player)
 
 void	Collectible::drawCollectible(sf::RenderWindow &window)
 {
-	window.draw(sprite);
+	window.draw(m_sprite);
 }
-
-
 
 
 /*
@@ -156,11 +149,11 @@ void	Collectible::drawCollectible(sf::RenderWindow &window)
 
 sf::Vector2f	Collectible::getCoord()
 {
-	return (coord);
+	return (m_coord);
 }
 
 sf::RectangleShape	&Collectible::getSprite()
 {
-	return (sprite);
+	return (m_sprite);
 }
 

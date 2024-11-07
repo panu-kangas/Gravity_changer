@@ -13,8 +13,17 @@ FetchContent_Declare(SFML
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(gravity src/main.cpp src/GameHandler.cpp src/Player.cpp 
-src/Map.cpp src/Collectible.cpp src/InfoScreen.cpp src/StartScreen.cpp src/EndScreen.cpp)
+add_executable(gravity 
+src/main.cpp 
+src/GameHandler.cpp 
+src/Player.cpp 
+src/Map.cpp 
+src/Collectible.cpp 
+src/InfoScreen.cpp 
+src/StartScreen.cpp 
+src/EndScreen.cpp
+src/collisionHandling.cpp)
+
 target_link_libraries(gravity PRIVATE sfml-graphics)
 target_compile_features(gravity PRIVATE cxx_std_17)
 target_include_directories(gravity PRIVATE include)

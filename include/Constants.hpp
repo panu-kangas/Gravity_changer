@@ -8,6 +8,9 @@
 # define PLAYER_SIZE 16
 # define COLLECT_SIZE 12
 
+# define GRAVITY_RECHARGE 2.5
+# define PLAYER_MAX_SPEED 6
+
 # define VALID_MAP_CHAR	"10"
 
 # include <SFML/Graphics.hpp> // this might not be a good place for this...?
@@ -50,8 +53,6 @@ struct mapTile
 {
 	int	type;
 	sf::RectangleShape	shape;
-
-	// something else...?
 };
 
 

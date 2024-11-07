@@ -8,21 +8,20 @@ class InfoScreen
 {
 	private:
 
-	sf::Vector2f		coord;
-	sf::Vector2f		size;
-	sf::RectangleShape	background;
+	sf::Vector2f		m_coord;
+	sf::Vector2f		m_size;
+	sf::RectangleShape	m_background;
+	sf::Text			m_scoreText;
+	sf::Text			m_gameTimerText;
+	sf::Text			m_gravityTimerText;
+	sf::Font			m_pixelFont;
+	sf::Clock			m_gameClock;
+	sf::RectangleShape	m_gravityMeter;
 
-	sf::Text			scoreText;
-	sf::Text			gameTimerText;
-	sf::Text			gravityTimerText;
-	sf::Font			pixelFont;
+	float	m_curGameTime;
+	int		m_scoreCount;
 
-	sf::Clock			gameClock;
-	float				curGameTime;
-
-	sf::RectangleShape	gravityMeter;
-
-	int		scoreCount;
+//////
 
 	public:
 
@@ -30,16 +29,12 @@ class InfoScreen
 	~InfoScreen() {};
 
 	void	drawInfoScreen(sf::RenderWindow &window);
-
 	void	addScore(unsigned int addition);
 	void	update(float gravityTime);
-
 	void	resetInfo();
 
 	float	getCurGameTime();
 	int		getScore();
-
-
 };
 
 

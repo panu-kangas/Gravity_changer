@@ -1,8 +1,8 @@
 #ifndef COLLECTIBLE_HPP
 # define COLLECTIBLE_HPP
 
-# include <cstdlib>
-# include <ctime>
+# include <cstdlib> // for rand() and srand()
+# include <ctime> // for time() that srand uses as seed
 
 # include "Constants.hpp"
 # include "Map.hpp"
@@ -12,15 +12,14 @@ class Collectible
 {
 	private:
 
-	sf::Vector2f		coord;
-	sf::RectangleShape	sprite;
-
-	bool	coordinateSet;
-
+	sf::Vector2f		m_coord;
+	sf::RectangleShape	m_sprite;
+	bool				m_coordinateSet;
 
 	void	setNewCoord(int x, int y, int direction, Player &player);
 	bool	checkAdjacentPlayer(Player &player, int x, int y);
 
+//////
 
 	public:
 

@@ -10,7 +10,6 @@ Map::Map()
 
 }
 
-
 /*
 	INIT MAP
 */
@@ -19,7 +18,6 @@ void	Map::initMap()
 {
 	readMap();
 }
-
 
 /*
 	READ MAP
@@ -35,8 +33,7 @@ void	Map::readMap()
 
 	if (!inputFile.is_open())
 	{
-		std::cerr << "\nMap-file error: could not open file.\n"
-		<< "Exiting program.\n" << std::endl;
+		std::cerr << "\nMap-file error: could not open file.\nExiting program.\n" << std::endl;
 		exit (1);
 	}
 
@@ -49,8 +46,7 @@ void	Map::readMap()
 			mapStr += tempStr;
 		else
 		{
-			std::cerr << "\nMap-file error: given map is not rectangular\n"
-			<< "Exiting program.\n" << std::endl;
+			std::cerr << "\nMap-file error: given map is not rectangular\nExiting program.\n" << std::endl;
 			exit (1);
 		}
 		mapHeightCounter++;
@@ -58,20 +54,16 @@ void	Map::readMap()
 
 	if (mapStr.empty())
 	{
-		std::cerr << "\nMap-file error: empty mapfile given.\n"
-		<< "Exiting program.\n" << std::endl;
+		std::cerr << "\nMap-file error: empty mapfile given.\nExiting program.\n" << std::endl;
 		exit (1);
 	}
-
-	if (rowLen != 33 || mapHeightCounter != 23)
+	else if (rowLen != 33 || mapHeightCounter != 23)
 	{
-		std::cerr << "\nMap-file error: map has to be 33x23 tiles.\n"
-		<< "Exiting program.\n" << std::endl;
+		std::cerr << "\nMap-file error: map has to be 33x23 tiles.\nExiting program.\n" << std::endl;
 		exit (1);
 	}
 
 	setTileVec(mapStr, rowLen);
-
 }
 
 void	Map::setTileVec(std::string mapStr, int rowLen)
@@ -81,18 +73,16 @@ void	Map::setTileVec(std::string mapStr, int rowLen)
 	std::string	ValidMapCharacters = VALID_MAP_CHAR;
 	std::vector<mapTile> tempVec;
 
-	for (int i = 0; i < mapStr.length(); i++)
+	for (int i = 0; i < mapStr.length(); ++i)
 	{
 		if (ValidMapCharacters.find_first_of(mapStr[i]) == ValidMapCharacters.npos)
 		{
-			std::cerr << "\nMap-file error: map has invalid character(s).\n"
-			<< "Exiting program.\n" << std::endl;
+			std::cerr << "\nMap-file error: map has invalid character(s).\n" << "Exiting program.\n" << std::endl;
 			exit (1);
 		}
 
 		tile.type = mapStr[i];
 		tile.shape.setSize({TILE_SIZE, TILE_SIZE});
-
 		if (tile.type == '1')
 		{
 			tile.type = WALL;
@@ -108,35 +98,31 @@ void	Map::setTileVec(std::string mapStr, int rowLen)
 		k++;
 		if (k == rowLen)
 		{
-			tileVec.push_back(tempVec);
+			m_tileVec.push_back(tempVec);
 			tempVec.clear();
 			k = 0;
 		}
 	}
 }
 
-
 /*
 	DRAW MAP
 */
 
-
 void	Map::drawMap(sf::RenderWindow &window)
 {
-	for (int y = 0; y < tileVec.size(); y++)
+	for (int y = 0; y < m_tileVec.size(); ++y)
 	{
-		for (int x = 0; x < tileVec[y].size(); x++)
+		for (int x = 0; x < m_tileVec[y].size(); ++x)
 		{
-			if (tileVec[y][x].type == WALL)
+			if (m_tileVec[y][x].type == WALL)
 			{
-				tileVec[y][x].shape.setPosition(x * TILE_SIZE, y * TILE_SIZE);
-				window.draw(tileVec[y][x].shape);
+				m_tileVec[y][x].shape.setPosition(x * TILE_SIZE, y * TILE_SIZE);
+				window.draw(m_tileVec[y][x].shape);
 			}
 		}
 	}
 }
-
-
 
 /*
 	GETTERS
@@ -144,12 +130,12 @@ void	Map::drawMap(sf::RenderWindow &window)
 
 std::vector<std::vector<mapTile>>	&Map::getTileVec()
 {
-	return (tileVec);
+	return (m_tileVec);
 }
 
 int			&Map::getTileType(int x, int y)
 {
-	return (tileVec[y][x].type);
+	return (m_tileVec[y][x].type);
 }
 
 
