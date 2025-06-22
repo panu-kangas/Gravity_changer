@@ -66,14 +66,18 @@ void	fixGameWindow(sf::RenderWindow &window)
 
 	// Fix game window size to be 70% of monitor
 	sf::Vector2u gameWindowSize;
-	gameWindowSize.x = monitorSize.x * 0.7;
-	gameWindowSize.y = monitorSize.y * 0.7;
+	gameWindowSize.x = monitorSize.x * 0.5;
+	gameWindowSize.y = monitorSize.y * 0.5;
 	window.setSize(gameWindowSize);
 
+	/*
 	// Center window
 	sf::Vector2i	intGameWindowSize;
 	intGameWindowSize.x = gameWindowSize.x;
 	intGameWindowSize.y = gameWindowSize.y;
 	window.setPosition({monitorSize.x / 2 - intGameWindowSize.x / 2, monitorSize.y / 2 - intGameWindowSize.y / 2});
+	*/
+
+	window.setPosition({0, 0});
 }
 
