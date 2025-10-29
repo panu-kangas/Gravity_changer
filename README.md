@@ -10,6 +10,10 @@ If you are using Windows, you might need to move the executable file (called "gr
 More detailed information about the game can be found below. 
 I really hope you enjoy the game! 😊 
 
+# Gameplay video (click the image to view in YouTube)
+
+[![Watch the Gravity Changer demo](https://img.youtube.com/vi/cY3cfVtlbtA/0.jpg)](https://youtu.be/cY3cfVtlbtA)
+
 # Installation
 
 Instructions on how to use the game.
