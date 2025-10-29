@@ -12,7 +12,7 @@ I really hope you enjoy the game! 😊
 
 # Gameplay video (click the image to view in YouTube)
 
-[![Watch the Gravity Changer demo](https://img.youtube.com/vi/cY3cfVtlbtA/0.jpg)](https://youtu.be/cY3cfVtlbtA)
+[![Watch the Gravity Changer demo](https://img.youtube.com/vi/cY3cfVtlbtA/maxresdefault.jpg)](https://youtu.be/cY3cfVtlbtA)
 
 # Installation
 
