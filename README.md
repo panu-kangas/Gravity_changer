@@ -26,6 +26,7 @@ Instructions on how to use the game.
     ```
     sudo apt update
     sudo apt install \
+        libfreetype6-dev \
         libxrandr-dev \
         libxcursor-dev \
         libudev-dev \
